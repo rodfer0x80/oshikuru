@@ -8,10 +8,12 @@ void updateSamurai(Samurai *samurai) {
     samurai->frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
     if (samurai->frameCounter >= 1.0f) {
         int frameCount;
-        if (samurai->isAttacking) {
-            frameCount = SAMURAI_ATTACK_FRAME_COUNT;
-        } else if (samurai->isRunning) {
+        if (samurai->isRunning) {
             frameCount = SAMURAI_RUN_FRAME_COUNT;
+        } else if (samurai->isAttacking) {
+            frameCount = SAMURAI_ATTACK_FRAME_COUNT;
+        } else if (samurai->isHurt) {
+            frameCount = SAMURAI_HURT_FRAME_COUNT;
         } else {
             frameCount = SAMURAI_IDLE_FRAME_COUNT;
         }
@@ -22,6 +24,9 @@ void updateSamurai(Samurai *samurai) {
         if (samurai->isAttacking && samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
             samurai->isAttacking = false;
             samurai->frameIndex = 0; 
+        } else if (samurai->isHurt && samurai->frameIndex >= SAMURAI_HURT_FRAME_COUNT) {
+            samurai->isHurt = false;
+            samurai->frameIndex = 0;
         } else {
             samurai->frameIndex %= frameCount;
         }
@@ -31,12 +36,12 @@ void updateSamurai(Samurai *samurai) {
     bool isMoving = false;
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
         samurai->position.x -= samurai->xSpeed;
-        samurai->facingRight = false;
+        samurai->facingLeft = false;
         isMoving = true;
     }
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
         samurai->position.x += samurai->xSpeed;
-        samurai->facingRight = true;
+        samurai->facingLeft = true;
         isMoving = true;
     }
     samurai->isRunning = isMoving;
@@ -50,6 +55,15 @@ void updateSamurai(Samurai *samurai) {
     // Attack
     if (IsKeyPressed(KEY_SPACE) && !samurai->isAttacking) {
         samurai->isAttacking = true;
+    }
+
+    // Hurt (debug)
+    if (IsKeyPressed(KEY_C) && !samurai->isHurt) {
+        samurai->isHurt = true;
+        samurai->hitpoints -= 20;
+        if (samurai->hitpoints <= 0) {
+            samurai->isDead = true;
+        }
     }
 
     // Apply gravity
@@ -76,7 +90,7 @@ void updateSamurai(Samurai *samurai) {
 
 void renderSamurai(Samurai *samurai) {
     Rectangle sourceRect = {samurai->frameIndex * SAMURAI_FRAME_SIZE, 0,
-                            samurai->facingRight ? SAMURAI_FRAME_SIZE
+                            samurai->facingLeft ? SAMURAI_FRAME_SIZE
                                                  : -SAMURAI_FRAME_SIZE,
                             SAMURAI_FRAME_SIZE};
 
@@ -84,7 +98,9 @@ void renderSamurai(Samurai *samurai) {
                           SAMURAI_FRAME_SIZE, SAMURAI_FRAME_SIZE};
 
     Texture2D texture;
-    if (samurai->isAttacking) {
+    if (samurai->isHurt) {
+        texture = samurai->hurtTexture;
+    } else if (samurai->isAttacking) {
         texture = samurai->attackTexture;
     } else if (samurai->isRunning) {
         texture = samurai->runTexture;

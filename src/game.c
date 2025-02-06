@@ -11,14 +11,39 @@ void renderGame(Samurai *samurai) {
 }
 
 void renderMenu(Samurai *samurai) {
-    samurai->position.x = SCREEN_WIDTH / 2 - SAMURAI_FRAME_SIZE / 2;
-    samurai->position.y = SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2;
-    samurai->facingRight = true;
+    Samurai menuSamurai = {
+        {SCREEN_WIDTH / 2 - SAMURAI_FRAME_SIZE / 2,
+         SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2}, // position
+        8.0f,                                         // xSpeed
+        0.0f,                                         // ySpeed
+        100,                                          // hitpoints
+        -20.0f,                                       // jumpStrength
+        1.2f,                                         // gravityEffect
+        samurai->idleTexture,                         // idleTexture
+        samurai->runTexture,                          // runTexture
+        samurai->attackTexture,                       // attackTexture
+        0,                                            // frameIndex
+        0.0f,                                         // frameCounter
+        true,                                         // facingLeft
+        true,                                         // isRunning
+        false,                                        // isJumping
+        false,                                        // isAttacking
+        false,                                        // isHurt
+        false                                         // isDead
+    };
     Rectangle menuBorder = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     ClearBackground(GRAY);
     DrawText("PRESS <ESQ> TO QUIT", 60, 60, 20, DARKBLUE);
-    DrawText("OSHIKURU", 380, 240, 80, DARKBLUE);
-    DrawText("PRESS <ENTER> TO PLAY", 400, 600, 30, DARKBLUE);
+    DrawText("OSHIKURU", 400, 240, 80, DARKBLUE);
+    DrawText("PRESS <ENTER> TO PLAY", 400, 560, 30, DARKBLUE);
     DrawRectangleLinesEx(menuBorder, 8, DARKBLUE);
-    renderSamurai(samurai);
+    renderSamurai(&menuSamurai);
+}
+
+void renderEndgame() {
+    Rectangle menuBorder = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    ClearBackground(GRAY);
+    DrawText("PRESS <ESQ> TO QUIT", 60, 60, 20, DARKBLUE);
+    DrawText("YOU HAVE DIED", 260, 400, 80, DARKBLUE);
+    DrawRectangleLinesEx(menuBorder, 8, DARKBLUE);
 }

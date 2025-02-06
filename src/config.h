@@ -14,5 +14,7 @@
 #define SAMURAI_IDLE_FRAME_COUNT 10
 #define SAMURAI_ATTACK_TEXTURE "samurai_attack.png"
 #define SAMURAI_ATTACK_FRAME_COUNT 7
+#define SAMURAI_HURT_TEXTURE "samurai_hurt.png"
+#define SAMURAI_HURT_FRAME_COUNT 4
 
 #endif // CONFIG_H

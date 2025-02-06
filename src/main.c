@@ -18,8 +18,9 @@ int main() {
     Texture2D samuraiIdleTexture = loadSamuraiIdleTexture();
     Texture2D samuraiRunTexture = loadSamuraiRunTexture();
     Texture2D samuraiAttackTexture = loadSamuraiAttackTexture();
+    Texture2D samuraiHurtTexture = loadSamuraiHurtTexture();
     if (samuraiIdleTexture.id == 0 || samuraiRunTexture.id == 0 ||
-        samuraiAttackTexture.id == 0) {
+        samuraiAttackTexture.id == 0 || samuraiHurtTexture.id == 0) {
         CloseWindow();
         return -1;
     }
@@ -31,6 +32,7 @@ int main() {
          SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2}, // position
         8.0f,                                         // xSpeed
         0.0f,                                         // ySpeed
+        100,                                          // hitpoints
         -20.0f,                                       // jumpStrength
         1.2f,                                         // gravityEffect
         samuraiIdleTexture,                           // idleTexture
@@ -38,17 +40,19 @@ int main() {
         samuraiAttackTexture,                         // attackTexture
         0,                                            // frameIndex
         0.0f,                                         // frameCounter
-        true,                                         // facingRight
-        false,                                        // isRunning
+        false,                                        // facingLeft
+        true,                                         // isRunning
         false,                                        // isJumping
-        false                                         // isAttacking
+        false,                                        // isAttacking
+        false,                                        // isHurt
+        false                                         // isDead
     };
     bool inGame = false;
     // ----
 
     // Main loop
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_ENTER)) {
+        if (IsKeyPressed(KEY_ENTER) && !samurai.isDead) {
             inGame = !inGame;
         }
 
@@ -57,10 +61,15 @@ int main() {
         }
 
         BeginDrawing();
-        if (inGame) {
-            renderGame(&samurai);
+        if (samurai.isDead) {
+            inGame = false;
+            renderEndgame();
         } else {
-            renderMenu(&samurai);
+            if (inGame) {
+                renderGame(&samurai);
+            } else {
+                renderMenu(&samurai);
+            }
         }
         EndDrawing();
     }

@@ -32,3 +32,8 @@ Texture2D loadSamuraiAttackTexture() {
     return loadTexture(SAMURAI_ATTACK_TEXTURE, SAMURAI_ATTACK_FRAME_COUNT,
                        SAMURAI_FRAME_SIZE);
 }
+
+Texture2D loadSamuraiHurtTexture() {
+    return loadTexture(SAMURAI_HURT_TEXTURE, SAMURAI_HURT_FRAME_COUNT,
+                       SAMURAI_FRAME_SIZE);
+}

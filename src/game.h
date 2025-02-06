@@ -6,5 +6,6 @@
 
 void renderGame(Samurai *samurai);
 void renderMenu(Samurai *samurai);
+void renderEndgame();
 
 #endif // GAME_H
