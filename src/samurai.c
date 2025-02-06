@@ -36,12 +36,12 @@ void updateSamurai(Samurai *samurai) {
     bool isMoving = false;
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
         samurai->position.x -= samurai->xSpeed;
-        samurai->facingLeft = false;
+        samurai->facingLeft = true;
         isMoving = true;
     }
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
         samurai->position.x += samurai->xSpeed;
-        samurai->facingLeft = true;
+        samurai->facingLeft = false;
         isMoving = true;
     }
     samurai->isRunning = isMoving;
@@ -90,8 +90,8 @@ void updateSamurai(Samurai *samurai) {
 
 void renderSamurai(Samurai *samurai) {
     Rectangle sourceRect = {samurai->frameIndex * SAMURAI_FRAME_SIZE, 0,
-                            samurai->facingLeft ? SAMURAI_FRAME_SIZE
-                                                 : -SAMURAI_FRAME_SIZE,
+                            samurai->facingLeft ? -SAMURAI_FRAME_SIZE
+                                                 : SAMURAI_FRAME_SIZE,
                             SAMURAI_FRAME_SIZE};
 
     Rectangle destRect = {samurai->position.x, samurai->position.y,

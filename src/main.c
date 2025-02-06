@@ -41,7 +41,7 @@ int main() {
         0,                                            // frameIndex
         0.0f,                                         // frameCounter
         false,                                        // facingLeft
-        true,                                         // isRunning
+        false,                                        // isRunning
         false,                                        // isJumping
         false,                                        // isAttacking
         false,                                        // isHurt

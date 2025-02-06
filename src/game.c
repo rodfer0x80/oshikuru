@@ -24,8 +24,8 @@ void renderMenu(Samurai *samurai) {
         samurai->attackTexture,                       // attackTexture
         0,                                            // frameIndex
         0.0f,                                         // frameCounter
-        true,                                         // facingLeft
-        true,                                         // isRunning
+        false,                                        // facingLeft
+        false,                                         // isRunning
         false,                                        // isJumping
         false,                                        // isAttacking
         false,                                        // isHurt
