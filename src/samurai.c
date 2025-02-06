@@ -7,8 +7,24 @@ void updateSamurai(Samurai *samurai) {
     // Animation update
     samurai->frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
     if (samurai->frameCounter >= 1.0f) {
-        samurai->frameIndex = (samurai->frameIndex + 1) % SAMURAI_FRAME_COUNT;
+        int frameCount;
+        if (samurai->isAttacking) {
+            frameCount = SAMURAI_ATTACK_FRAME_COUNT;
+        } else if (samurai->isRunning) {
+            frameCount = SAMURAI_RUN_FRAME_COUNT;
+        } else {
+            frameCount = SAMURAI_IDLE_FRAME_COUNT;
+        }
+        
+        samurai->frameIndex++;
         samurai->frameCounter = 0.0f;
+
+        if (samurai->isAttacking && samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
+            samurai->isAttacking = false;
+            samurai->frameIndex = 0; 
+        } else {
+            samurai->frameIndex %= frameCount;
+        }
     }
 
     // Movement
@@ -23,11 +39,17 @@ void updateSamurai(Samurai *samurai) {
         samurai->facingRight = true;
         isMoving = true;
     }
+    samurai->isRunning = isMoving;
 
     // Jump
-    if (IsKeyPressed(KEY_SPACE) && !samurai->isJumping) {
+    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping) {
         samurai->ySpeed = samurai->jumpStrength;
         samurai->isJumping = true;
+    }
+
+    // Attack
+    if (IsKeyPressed(KEY_SPACE) && !samurai->isAttacking) {
+        samurai->isAttacking = true;
     }
 
     // Apply gravity
@@ -61,6 +83,14 @@ void renderSamurai(Samurai *samurai) {
     Rectangle destRect = {samurai->position.x, samurai->position.y,
                           SAMURAI_FRAME_SIZE, SAMURAI_FRAME_SIZE};
 
-    DrawTexturePro(samurai->idleTexture, sourceRect, destRect, (Vector2){0, 0},
-                   0.0f, WHITE);
+    Texture2D texture;
+    if (samurai->isAttacking) {
+        texture = samurai->attackTexture;
+    } else if (samurai->isRunning) {
+        texture = samurai->runTexture;
+    } else {
+        texture = samurai->idleTexture;
+    }
+
+    DrawTexturePro(texture, sourceRect, destRect, (Vector2){0, 0}, 0.0f, WHITE);
 }
