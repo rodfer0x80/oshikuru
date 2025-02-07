@@ -79,17 +79,17 @@ void updateSamurai(Samurai *samurai) {
     // Platform collision detection
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {
-        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD, samurai->position.y + SAMURAI_Y_MOD,
+        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
+                                 samurai->position.y + SAMURAI_Y_MOD,
                                  SAMURAI_X_REC, SAMURAI_Y_REC};
 
         if (CheckCollisionRecs(samuraiRect, platforms[i].rect)) {
-            // Collision detected
             if (samurai->ySpeed > 0 &&
                 samurai->position.y + SAMURAI_Y_MOD + SAMURAI_Y_REC >=
                     platforms[i].rect.y) {
                 // Land on the platform
                 samurai->position.y =
-                    platforms[i].rect.y - SAMURAI_Y_MOD - SAMURAI_Y_REC; 
+                    platforms[i].rect.y - SAMURAI_Y_MOD - SAMURAI_Y_REC;
                 samurai->ySpeed = 0;
                 onPlatform = true;
                 if (samurai->isJumping) {
