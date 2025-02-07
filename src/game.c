@@ -1,13 +1,22 @@
 #include "game.h"
 #include "config.h"
+#include "platform.h"
 #include "samurai.h"
 
 void renderGame(Samurai *samurai) {
     ClearBackground(GRAY);
-    Rectangle groundPlatform = {0, SCREEN_HEIGHT / 2 + SAMURAI_FRAME_SIZE / 3,
-                                SCREEN_WIDTH, 8};
-    DrawRectangleLinesEx(groundPlatform, 8, DARKBLUE);
+    for (int i = 0; i < platformCount; i++) {
+        DrawRectangleRec(platforms[i].rect, platforms[i].color);
+        if (DEBUG_RAYLIB)
+            DrawRectangleLinesEx(platforms[i].rect, 2, RED);
+    }
     renderSamurai(samurai);
+    if (DEBUG_RAYLIB) {
+        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
+                                 samurai->position.y + SAMURAI_Y_MOD,
+                                 SAMURAI_X_REC, SAMURAI_Y_REC};
+        DrawRectangleLinesEx(samuraiRect, 2, RED);
+    }
 }
 
 void renderMenu(Samurai *samurai) {
@@ -25,7 +34,7 @@ void renderMenu(Samurai *samurai) {
         0,                                            // frameIndex
         0.0f,                                         // frameCounter
         false,                                        // facingLeft
-        false,                                         // isRunning
+        false,                                        // isRunning
         false,                                        // isJumping
         false,                                        // isAttacking
         false,                                        // isHurt

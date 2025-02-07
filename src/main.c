@@ -5,6 +5,7 @@
 #include "game.h"
 #include "resources.h"
 #include "samurai.h"
+#include "platform.h"
 
 int main() {
     // Init and configs
@@ -47,6 +48,7 @@ int main() {
         false,                                        // isHurt
         false                                         // isDead
     };
+    platformLevel0();    
     bool inGame = false;
     // ----
 
