@@ -93,11 +93,16 @@ void updateSamurai(Samurai *samurai) {
                 samurai->ySpeed = 0;
                 onPlatform = true;
                 if (samurai->isJumping) {
-                    samurai->xSpeed -= 2;
+                    samurai->xSpeed = 8;
                     samurai->isJumping = false;
                 }
             }
         }
+    }
+    
+    if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC  < SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2) {
+        samurai->isJumping = true;
+        samurai->xSpeed = 10;
     }
 
     // Border collision
@@ -105,16 +110,15 @@ void updateSamurai(Samurai *samurai) {
         samurai->position.x = 0 - SAMURAI_X_MOD;
     if (samurai->position.x >= SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC)
         samurai->position.x = SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC;
-    if (samurai->position.y <= 0 + SAMURAI_Y_MOD) {
-        samurai->position.y = 0 + SAMURAI_Y_MOD;
+    if (samurai->position.y <= 0 - SAMURAI_Y_MOD) {
+        samurai->position.y = 0 - SAMURAI_Y_MOD;
         samurai->ySpeed = 0;
     }
     if (samurai->position.y >= SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC) {
         samurai->position.y = SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC;
         samurai->ySpeed = 0;
         if (samurai->isJumping) {
-            samurai->xSpeed -= 2;
-            samurai->isJumping = false;
+            samurai->xSpeed = 10;
         }
     }
 }
