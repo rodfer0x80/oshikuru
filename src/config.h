@@ -19,6 +19,7 @@
 
 #define SAMURAI_ATTACK_TEXTURE "samurai_attack.png"
 #define SAMURAI_ATTACK_FRAME_COUNT 7
+#define SAMURAI_SLASH_FRAME 5
 #define SAMURAI_ATTACK_RANGE 75
 
 #define SAMURAI_HURT_TEXTURE "samurai_hurt.png"

@@ -66,7 +66,14 @@ void updateSamuraiMovement(Samurai *samurai) {
 
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->isHurt) {
         samurai->isHurt = true;
-        samurai->hitpoints -= 20;
+        samurai->hitpoints -= 1;
+        if (samurai->hitpoints <= 0) {
+            samurai->isDead = true;
+        }
+    }
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_X) && !samurai->isHurt) {
+        samurai->isHurt = true;
+        samurai->hitpoints -= 100;
         if (samurai->hitpoints <= 0) {
             samurai->isDead = true;
         }
@@ -77,7 +84,7 @@ void updateSamuraiPhysics(Samurai *samurai) {
     samurai->ySpeed += samurai->gravityEffect;
     samurai->position.y += samurai->ySpeed;
 
-    if (samurai->isAttacking && samurai->frameIndex == 5 &&
+    if (samurai->isAttacking && samurai->frameIndex == SAMURAI_SLASH_FRAME &&
         !samurai->slash.isActive) {
         samurai->slash =
             (Slash){{samurai->position.x + SAMURAI_X_MOD +
@@ -87,7 +94,7 @@ void updateSamuraiPhysics(Samurai *samurai) {
                     SAMURAI_Y_REC,
                     samurai->damage,
                     true};
-    } else if (samurai->frameIndex < 5 || samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
+    } else if (samurai->frameIndex < SAMURAI_SLASH_FRAME || samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
         samurai->slash.isActive = false;
     }
 
