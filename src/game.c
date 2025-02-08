@@ -1,16 +1,24 @@
 #include "game.h"
 #include "config.h"
-#include "platform.h"
 #include "samurai.h"
+#include "platform.h"
+#include "portal.h"
 
 void renderGame(Samurai *samurai) {
     ClearBackground(GRAY);
+    
     for (int i = 0; i < platformCount; i++) {
         DrawRectangleRec(platforms[i].rect, platforms[i].color);
         if (DEBUG_RAYLIB)
             DrawRectangleLinesEx(platforms[i].rect, 2, RED);
     }
+
+    DrawRectangleRec(portal.rect, portal.color);
+    if (DEBUG_RAYLIB)
+        DrawRectangleLinesEx(portal.rect, 2, RED);
+    
     renderSamurai(samurai);
+    
     if (DEBUG_RAYLIB) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
                                  samurai->position.y + SAMURAI_Y_MOD,
@@ -49,7 +57,15 @@ void renderMenu(Samurai *samurai) {
     renderSamurai(&menuSamurai);
 }
 
-void renderEndgame() {
+void renderVictory() {
+    Rectangle menuBorder = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    ClearBackground(GRAY);
+    DrawText("PRESS <ESQ> TO QUIT", 60, 60, 20, DARKBLUE);
+    DrawText("YOU HAVE WON", 260, 400, 80, DARKBLUE);
+    DrawRectangleLinesEx(menuBorder, 8, DARKBLUE);
+}
+
+void renderDefeat() {
     Rectangle menuBorder = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     ClearBackground(GRAY);
     DrawText("PRESS <ESQ> TO QUIT", 60, 60, 20, DARKBLUE);

@@ -1,7 +1,5 @@
-#include <stddef.h>
-
+#include "stddef.h"
 #include "raylib.h"
-
 #include "config.h"
 #include "resources.h"
 

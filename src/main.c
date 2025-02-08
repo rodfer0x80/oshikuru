@@ -3,9 +3,10 @@
 
 #include "config.h"
 #include "game.h"
+#include "platform.h"
+#include "portal.h"
 #include "resources.h"
 #include "samurai.h"
-#include "platform.h"
 
 int main() {
     // Init and configs
@@ -27,7 +28,7 @@ int main() {
     }
     // ----
 
-    // State data
+    // Game data
     Samurai samurai = {
         {SCREEN_WIDTH / 2 - SAMURAI_FRAME_SIZE / 2,
          SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2}, // position
@@ -48,31 +49,60 @@ int main() {
         false,                                        // isHurt
         false                                         // isDead
     };
-    platformLevel0();    
     bool inGame = false;
+    int level = 0;
     // ----
 
     // Main loop
     while (!WindowShouldClose()) {
+        // Listen for <ESQ> or <ENTER> for quit or menu
         if (IsKeyPressed(KEY_ENTER) && !samurai.isDead) {
             inGame = !inGame;
         }
 
+        // Update level
+        if (level == 0) {
+            platformLevel0();
+            portalLevel0();
+        }
+        if (level == 1) {
+            platformLevel1();
+            portalLevel1();
+        }
+        // Update player
         if (inGame) {
             updateSamurai(&samurai);
         }
 
         BeginDrawing();
+
         if (samurai.isDead) {
             inGame = false;
-            renderEndgame();
+            renderDefeat();
         } else {
             if (inGame) {
-                renderGame(&samurai);
+                if (level > MAX_LEVEL) {
+                    renderVictory();
+                } else {
+                    Rectangle samuraiRect = {samurai.position.x + SAMURAI_X_MOD,
+                                             samurai.position.y + SAMURAI_Y_MOD,
+                                             SAMURAI_X_REC, SAMURAI_Y_REC};
+
+                    if (CheckCollisionRecs(samuraiRect, portal.rect)) {
+                        level++;
+                    }
+                    if (DEBUG_RAYLIB) {
+                        if (IsKeyPressed(KEY_N)) {
+                            level++;
+                        }
+                    }
+                    renderGame(&samurai);
+                }
             } else {
                 renderMenu(&samurai);
             }
         }
+
         EndDrawing();
     }
     // ----
