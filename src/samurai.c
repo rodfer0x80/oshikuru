@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "platform.h"
+#include "portal.h"
 #include "samurai.h"
 
 void updateSamurai(Samurai *samurai) {
@@ -80,7 +81,7 @@ void updateSamurai(Samurai *samurai) {
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
-                                 samurai->position.y + SAMURAI_Y_MOD,
+                                 samurai->position.y + SAMURAI_Y_MOD + 10,
                                  SAMURAI_X_REC, SAMURAI_Y_REC};
 
         if (CheckCollisionRecs(samuraiRect, platforms[i].rect)) {
@@ -99,8 +100,9 @@ void updateSamurai(Samurai *samurai) {
             }
         }
     }
-    
-    if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC  < SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2) {
+
+    if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC <
+                           SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2) {
         samurai->isJumping = true;
         samurai->xSpeed = 10;
     }
@@ -121,6 +123,16 @@ void updateSamurai(Samurai *samurai) {
             samurai->xSpeed = 10;
         }
     }
+}
+
+bool samuraiPassesPortal(Samurai *samurai) {
+    Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
+                             samurai->position.y + SAMURAI_Y_MOD, SAMURAI_X_REC,
+                             SAMURAI_Y_REC};
+
+    if (CheckCollisionRecs(samuraiRect, portal.rect))
+        return true;
+    return false;
 }
 
 void renderSamurai(Samurai *samurai) {

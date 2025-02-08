@@ -17,6 +17,8 @@ void renderGame(Samurai *samurai) {
     if (DEBUG_RAYLIB)
         DrawRectangleLinesEx(portal.rect, 2, RED);
     
+    
+    DrawText(TextFormat("HP: %d", samurai->hitpoints), 40, 40, 40, DARKBLUE);
     renderSamurai(samurai);
     
     if (DEBUG_RAYLIB) {

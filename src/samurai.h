@@ -27,6 +27,9 @@ typedef struct Samurai {
 } Samurai;
 
 void updateSamurai(Samurai *samurai);
+
 void renderSamurai(Samurai *samurai);
+
+bool samuraiPassesPortal(Samurai *samurai);
 
 #endif // SAMURAI_H

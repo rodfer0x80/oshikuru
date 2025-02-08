@@ -84,11 +84,7 @@ int main() {
                 if (level > MAX_LEVEL) {
                     renderVictory();
                 } else {
-                    Rectangle samuraiRect = {samurai.position.x + SAMURAI_X_MOD,
-                                             samurai.position.y + SAMURAI_Y_MOD,
-                                             SAMURAI_X_REC, SAMURAI_Y_REC};
-
-                    if (CheckCollisionRecs(samuraiRect, portal.rect)) {
+                    if (samuraiPassesPortal(&samurai)) {
                         level++;
                     }
                     if (DEBUG_RAYLIB) {

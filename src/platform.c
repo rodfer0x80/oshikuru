@@ -20,14 +20,14 @@ void resetPlatforms() {
 
 void platformLevel0() {
     resetPlatforms();
-    newPlatform(0, SCREEN_HEIGHT - 8, SCREEN_WIDTH, 8, BLACK);
-    newPlatform(700, 550, 50, 8, BROWN);
-    newPlatform(200, 400, 300, 8, YELLOW);
-    newPlatform(600, 300, 200, 8, GREEN);
-    newPlatform(600, 700, 200, 8, PURPLE);
+    newPlatform(0, SCREEN_HEIGHT - 12, SCREEN_WIDTH, 12, DARKBLUE);
+    newPlatform(700, 550, 50, 12, BROWN);
+    newPlatform(200, 400, 300, 12, YELLOW);
+    newPlatform(600, 300, 200, 12, GREEN);
+    newPlatform(600, 700, 200, 12, PURPLE);
 }
 
 void platformLevel1() {
     resetPlatforms();
-    newPlatform(0, SCREEN_HEIGHT - 8, SCREEN_WIDTH, 8, BLACK);
+    newPlatform(0, SCREEN_HEIGHT - 12, SCREEN_WIDTH, 12, BLACK);
 }
