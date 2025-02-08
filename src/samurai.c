@@ -38,7 +38,6 @@ void updateSamuraiAnimation(Samurai *samurai) {
 
 void updateSamuraiMovement(Samurai *samurai) {
     bool isMoving = false;
-    if (!samurai->isAttacking) {
         if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
             samurai->position.x -= samurai->xSpeed;
             samurai->facingLeft = true;
@@ -49,7 +48,6 @@ void updateSamuraiMovement(Samurai *samurai) {
             samurai->facingLeft = false;
             isMoving = true;
         }
-    }
     samurai->isRunning = isMoving;
 
     if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping &&
@@ -102,7 +100,7 @@ void updateSamuraiPhysics(Samurai *samurai) {
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
-                                 samurai->position.y + SAMURAI_Y_MOD + samurai->damage,
+                                 samurai->position.y + SAMURAI_Y_MOD + 40,
                                  SAMURAI_X_REC, SAMURAI_Y_REC};
 
         if (CheckCollisionRecs(samuraiRect, platforms[i].rect)) {
@@ -121,7 +119,7 @@ void updateSamuraiPhysics(Samurai *samurai) {
     }
 
     if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC <
-                           SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 5) {
+                           SCREEN_HEIGHT) {
         samurai->isJumping = true;
     }
 
