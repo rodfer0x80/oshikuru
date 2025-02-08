@@ -40,7 +40,7 @@ void updateSamuraiAnimation(Samurai *samurai) {
 
 void updateSamuraiMovement(Samurai *samurai) {
     bool isMoving = false;
-    if (!samurai->isAttacking) {  
+    if (!samurai->isAttacking) {
         if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
             samurai->position.x -= samurai->xSpeed;
             samurai->facingLeft = true;
@@ -54,7 +54,8 @@ void updateSamuraiMovement(Samurai *samurai) {
     }
     samurai->isRunning = isMoving;
 
-    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping && !samurai->isAttacking) {
+    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping &&
+        !samurai->isAttacking) {
         samurai->ySpeed = samurai->jumpStrength;
         samurai->xSpeed += 2;
         samurai->isJumping = true;
@@ -63,12 +64,7 @@ void updateSamuraiMovement(Samurai *samurai) {
     if (IsKeyPressed(KEY_SPACE) && !samurai->isAttacking) {
         samurai->isAttacking = true;
         samurai->frameIndex = 0;
-        samurai->slash = (Slash){{samurai->position.x + SAMURAI_X_MOD + (samurai->facingLeft ? -SAMURAI_ATTACK_RANGE : 0),
-                                  samurai->position.y + SAMURAI_Y_MOD},
-                                 SAMURAI_X_REC + SAMURAI_ATTACK_RANGE,
-                                 SAMURAI_Y_REC,
-                                 samurai->damage,
-                                 true};
+        samurai->attackTimer = 0;
     }
 
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->isHurt) {
@@ -84,7 +80,19 @@ void updateSamuraiPhysics(Samurai *samurai) {
     samurai->ySpeed += samurai->gravityEffect;
     samurai->position.y += samurai->ySpeed;
 
-    samurai->slash.isActive = samurai->isAttacking && samurai->frameIndex == 5;
+    if (samurai->isAttacking && samurai->frameIndex == 5 &&
+        !samurai->slash.isActive) {
+        samurai->slash =
+            (Slash){{samurai->position.x + SAMURAI_X_MOD +
+                         (samurai->facingLeft ? -SAMURAI_ATTACK_RANGE : 0),
+                     samurai->position.y + SAMURAI_Y_MOD},
+                    SAMURAI_X_REC + SAMURAI_ATTACK_RANGE,
+                    SAMURAI_Y_REC,
+                    samurai->damage,
+                    true};
+    } else if (samurai->frameIndex < 5 || samurai->frameIndex == SAMURAI_ATTACK_FRAME_COUNT) {
+        samurai->slash.isActive = false;
+    }
 
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {

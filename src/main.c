@@ -49,6 +49,7 @@ int main() {
         false,                                        // isHurt
         false,                                        // isDead
         20,                                           // damage
+        0,                                           // attackTimer
     };
 
     bool inGame = false;

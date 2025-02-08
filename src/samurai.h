@@ -33,6 +33,7 @@ typedef struct Samurai {
     bool isHurt;
     bool isDead;
     int damage;
+    int attackTimer;
     Slash slash;
 } Samurai;
 
