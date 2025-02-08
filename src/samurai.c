@@ -6,8 +6,6 @@
 #include "samurai.h"
 
 void updateSamuraiAnimation(Samurai *samurai) {
-    samurai->isHurt = false;
-
     samurai->frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
     if (samurai->frameCounter >= 1.0f) {
         int frameCount;
@@ -89,7 +87,7 @@ void updateSamuraiPhysics(Samurai *samurai) {
                     SAMURAI_Y_REC,
                     samurai->damage,
                     true};
-    } else if (samurai->frameIndex < 5 || samurai->frameIndex == SAMURAI_ATTACK_FRAME_COUNT) {
+    } else if (samurai->frameIndex < 5 || samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
         samurai->slash.isActive = false;
     }
 
