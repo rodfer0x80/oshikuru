@@ -57,7 +57,6 @@ void updateSamuraiMovement(Samurai *samurai) {
     if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping &&
         !samurai->isAttacking) {
         samurai->ySpeed = samurai->jumpStrength;
-        samurai->xSpeed += 2;
         samurai->isJumping = true;
     }
 
@@ -109,7 +108,6 @@ void updateSamuraiPhysics(Samurai *samurai) {
                 samurai->ySpeed = 0;
                 onPlatform = true;
                 if (samurai->isJumping) {
-                    samurai->xSpeed = 8;
                     samurai->isJumping = false;
                 }
             }
@@ -119,7 +117,6 @@ void updateSamuraiPhysics(Samurai *samurai) {
     if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC <
                            SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 5) {
         samurai->isJumping = true;
-        samurai->xSpeed = 10;
     }
 
     if (samurai->position.x <= 0 - SAMURAI_X_MOD)
@@ -133,9 +130,6 @@ void updateSamuraiPhysics(Samurai *samurai) {
     if (samurai->position.y >= SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC) {
         samurai->position.y = SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC;
         samurai->ySpeed = 0;
-        if (samurai->isJumping) {
-            samurai->xSpeed = 10;
-        }
     }
 }
 
