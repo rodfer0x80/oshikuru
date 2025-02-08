@@ -73,7 +73,7 @@ void updateSamuraiMovement(Samurai *samurai) {
     }
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_X) && !samurai->isHurt) {
         samurai->isHurt = true;
-        samurai->hitpoints -= 100;
+        samurai->hitpoints -= SAMURAI_MAX_HITPOINTS;
         if (samurai->hitpoints <= 0) {
             samurai->isDead = true;
         }
@@ -94,14 +94,15 @@ void updateSamuraiPhysics(Samurai *samurai) {
                     SAMURAI_Y_REC,
                     samurai->damage,
                     true};
-    } else if (samurai->frameIndex < SAMURAI_SLASH_FRAME || samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
+    } else if (samurai->frameIndex < SAMURAI_SLASH_FRAME ||
+               samurai->frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
         samurai->slash.isActive = false;
     }
 
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
-                                 samurai->position.y + SAMURAI_Y_MOD + 10,
+                                 samurai->position.y + SAMURAI_Y_MOD + samurai->damage,
                                  SAMURAI_X_REC, SAMURAI_Y_REC};
 
         if (CheckCollisionRecs(samuraiRect, platforms[i].rect)) {
