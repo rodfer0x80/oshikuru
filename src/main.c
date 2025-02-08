@@ -47,8 +47,10 @@ int main() {
         false,                                        // isJumping
         false,                                        // isAttacking
         false,                                        // isHurt
-        false                                         // isDead
+        false,                                        // isDead
+        20,                                           // damage
     };
+
     bool inGame = false;
     int level = 0;
     // ----

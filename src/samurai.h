@@ -5,6 +5,14 @@
 
 #include "raylib.h"
 
+typedef struct Slash {
+    Vector2 position;
+    int width;
+    int height;
+    int damage;
+    bool isActive;
+} Slash;
+
 typedef struct Samurai {
     Vector2 position;
     float xSpeed;
@@ -24,12 +32,15 @@ typedef struct Samurai {
     bool isAttacking;
     bool isHurt;
     bool isDead;
+    int damage;
+    Slash slash;
 } Samurai;
 
+void updateSamuraiAnimation(Samurai *samurai);
+void updateSamuraiMovement(Samurai *samurai);
+void updateSamuraiPhysics(Samurai *samurai);
 void updateSamurai(Samurai *samurai);
-
 void renderSamurai(Samurai *samurai);
-
 bool samuraiPassesPortal(Samurai *samurai);
 
 #endif // SAMURAI_H

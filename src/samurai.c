@@ -5,15 +5,16 @@
 #include "portal.h"
 #include "samurai.h"
 
-void updateSamurai(Samurai *samurai) {
-    // Animation update
+void updateSamuraiAnimation(Samurai *samurai) {
+    samurai->isHurt = false;
+
     samurai->frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
     if (samurai->frameCounter >= 1.0f) {
         int frameCount;
-        if (samurai->isAttacking) {
-            frameCount = SAMURAI_ATTACK_FRAME_COUNT;
-        } else if (samurai->isHurt) {
+        if (samurai->isHurt) {
             frameCount = SAMURAI_HURT_FRAME_COUNT;
+        } else if (samurai->isAttacking) {
+            frameCount = SAMURAI_ATTACK_FRAME_COUNT;
         } else if (samurai->isRunning) {
             frameCount = SAMURAI_RUN_FRAME_COUNT;
         } else {
@@ -35,49 +36,56 @@ void updateSamurai(Samurai *samurai) {
             samurai->frameIndex %= frameCount;
         }
     }
+}
 
-    // Movement
+void updateSamuraiMovement(Samurai *samurai) {
     bool isMoving = false;
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-        samurai->position.x -= samurai->xSpeed;
-        samurai->facingLeft = true;
-        isMoving = true;
-    }
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-        samurai->position.x += samurai->xSpeed;
-        samurai->facingLeft = false;
-        isMoving = true;
+    if (!samurai->isAttacking) {  
+        if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
+            samurai->position.x -= samurai->xSpeed;
+            samurai->facingLeft = true;
+            isMoving = true;
+        }
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
+            samurai->position.x += samurai->xSpeed;
+            samurai->facingLeft = false;
+            isMoving = true;
+        }
     }
     samurai->isRunning = isMoving;
 
-    // Jump
-    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping) {
+    if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) && !samurai->isJumping && !samurai->isAttacking) {
         samurai->ySpeed = samurai->jumpStrength;
         samurai->xSpeed += 2;
         samurai->isJumping = true;
     }
 
-    // Attack
     if (IsKeyPressed(KEY_SPACE) && !samurai->isAttacking) {
         samurai->isAttacking = true;
+        samurai->frameIndex = 0;
+        samurai->slash = (Slash){{samurai->position.x + SAMURAI_X_MOD + (samurai->facingLeft ? -SAMURAI_ATTACK_RANGE : 0),
+                                  samurai->position.y + SAMURAI_Y_MOD},
+                                 SAMURAI_X_REC + SAMURAI_ATTACK_RANGE,
+                                 SAMURAI_Y_REC,
+                                 samurai->damage,
+                                 true};
     }
 
-    // Hurt (debug)
-    if (DEBUG_RAYLIB) {
-        if (IsKeyPressed(KEY_C) && !samurai->isHurt) {
-            samurai->isHurt = true;
-            samurai->hitpoints -= 20;
-            if (samurai->hitpoints <= 0) {
-                samurai->isDead = true;
-            }
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->isHurt) {
+        samurai->isHurt = true;
+        samurai->hitpoints -= 20;
+        if (samurai->hitpoints <= 0) {
+            samurai->isDead = true;
         }
     }
+}
 
-    // Apply gravity
+void updateSamuraiPhysics(Samurai *samurai) {
     samurai->ySpeed += samurai->gravityEffect;
     samurai->position.y += samurai->ySpeed;
 
-    // Platform collision detection
+    samurai->slash.isActive = samurai->isAttacking && samurai->frameIndex == 5;
+
     bool onPlatform = false;
     for (int i = 0; i < MAX_PLATFORMS; i++) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
@@ -88,7 +96,6 @@ void updateSamurai(Samurai *samurai) {
             if (samurai->ySpeed > 0 &&
                 samurai->position.y + SAMURAI_Y_MOD + SAMURAI_Y_REC >=
                     platforms[i].rect.y) {
-                // Land on the platform
                 samurai->position.y =
                     platforms[i].rect.y - SAMURAI_Y_MOD - SAMURAI_Y_REC;
                 samurai->ySpeed = 0;
@@ -102,12 +109,11 @@ void updateSamurai(Samurai *samurai) {
     }
 
     if (!onPlatform && samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC <
-                           SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 2) {
+                           SCREEN_HEIGHT / 2 - SAMURAI_FRAME_SIZE / 5) {
         samurai->isJumping = true;
         samurai->xSpeed = 10;
     }
 
-    // Border collision
     if (samurai->position.x <= 0 - SAMURAI_X_MOD)
         samurai->position.x = 0 - SAMURAI_X_MOD;
     if (samurai->position.x >= SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC)
@@ -125,14 +131,17 @@ void updateSamurai(Samurai *samurai) {
     }
 }
 
+void updateSamurai(Samurai *samurai) {
+    updateSamuraiAnimation(samurai);
+    updateSamuraiMovement(samurai);
+    updateSamuraiPhysics(samurai);
+}
+
 bool samuraiPassesPortal(Samurai *samurai) {
     Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
                              samurai->position.y + SAMURAI_Y_MOD, SAMURAI_X_REC,
                              SAMURAI_Y_REC};
-
-    if (CheckCollisionRecs(samuraiRect, portal.rect))
-        return true;
-    return false;
+    return CheckCollisionRecs(samuraiRect, portal.rect);
 }
 
 void renderSamurai(Samurai *samurai) {
@@ -140,7 +149,6 @@ void renderSamurai(Samurai *samurai) {
                             samurai->facingLeft ? -SAMURAI_FRAME_SIZE
                                                 : SAMURAI_FRAME_SIZE,
                             SAMURAI_FRAME_SIZE};
-
     Rectangle destRect = {samurai->position.x, samurai->position.y,
                           SAMURAI_FRAME_SIZE, SAMURAI_FRAME_SIZE};
 

@@ -1,26 +1,33 @@
 #include "game.h"
 #include "config.h"
-#include "samurai.h"
 #include "platform.h"
 #include "portal.h"
+#include "samurai.h"
 
 void renderGame(Samurai *samurai) {
     ClearBackground(GRAY);
-    
+
+    DrawText(TextFormat("HP: %d", samurai->hitpoints), 40, 40, 40, DARKBLUE);
+
     for (int i = 0; i < platformCount; i++) {
         DrawRectangleRec(platforms[i].rect, platforms[i].color);
         if (DEBUG_RAYLIB)
-            DrawRectangleLinesEx(platforms[i].rect, 2, RED);
+            DrawRectangleLinesEx(platforms[i].rect, 2, ORANGE);
     }
 
     DrawRectangleRec(portal.rect, portal.color);
     if (DEBUG_RAYLIB)
-        DrawRectangleLinesEx(portal.rect, 2, RED);
-    
-    
-    DrawText(TextFormat("HP: %d", samurai->hitpoints), 40, 40, 40, DARKBLUE);
+        DrawRectangleLinesEx(portal.rect, 2, PINK);
+
     renderSamurai(samurai);
-    
+    if (DEBUG_RAYLIB) {
+        Rectangle samuraiSlashRect = {samurai->slash.position.x, samurai->slash.position.y,
+                                           samurai->slash.width,
+                                           samurai->slash.height};
+        if (samurai->slash.isActive) {
+            DrawRectangleLinesEx(samuraiSlashRect, 2, YELLOW);
+        }
+    }
     if (DEBUG_RAYLIB) {
         Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
                                  samurai->position.y + SAMURAI_Y_MOD,
