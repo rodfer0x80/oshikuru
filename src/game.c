@@ -4,35 +4,40 @@
 #include "portal.h"
 #include "samurai.h"
 
-void renderGame(Samurai *samurai) {
+void renderGame(Samurai *samurai, Platforms *platforms, Portal *portal) {
     ClearBackground(GRAY);
 
     DrawText(TextFormat("HP: %d", samurai->hitpoints), 40, 40, 40, DARKBLUE);
 
-    for (int i = 0; i < platformCount; i++) {
-        DrawRectangleRec(platforms[i].rect, platforms[i].color);
+    for (int i = 0; i < platforms->count; i++) {
+        DrawRectangleRec(platforms->units[i].rect, platforms->units[i].color);
         if (DEBUG_RAYLIB)
-            DrawRectangleLinesEx(platforms[i].rect, 2, ORANGE);
+            DrawRectangleLinesEx(platforms->units[i].rect, 2, WHITE);
     }
 
-    DrawRectangleRec(portal.rect, portal.color);
+    DrawRectangleRec(portal->rect, portal->color);
     if (DEBUG_RAYLIB)
-        DrawRectangleLinesEx(portal.rect, 2, PINK);
+        DrawRectangleLinesEx(portal->rect, 2, PINK);
 
     renderSamurai(samurai);
     if (DEBUG_RAYLIB) {
+        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
+                                 samurai->position.y + SAMURAI_Y_MOD,
+                                 SAMURAI_X_REC, SAMURAI_Y_REC};
+        DrawRectangleLinesEx(samuraiRect, 2, RED);
+        
+        Rectangle samuraiPlatformRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
+                                 samurai->position.y + SAMURAI_Y_SLIM_MOD,
+                                 SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
+        DrawRectangleLinesEx(samuraiPlatformRect, 2, ORANGE);
+        
+        
         Rectangle samuraiSlashRect = {samurai->slash.position.x, samurai->slash.position.y,
                                            samurai->slash.width,
                                            samurai->slash.height};
         if (samurai->slash.isActive) {
             DrawRectangleLinesEx(samuraiSlashRect, 2, YELLOW);
         }
-    }
-    if (DEBUG_RAYLIB) {
-        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
-                                 samurai->position.y + SAMURAI_Y_MOD,
-                                 SAMURAI_X_REC, SAMURAI_Y_REC};
-        DrawRectangleLinesEx(samuraiRect, 2, RED);
     }
 }
 

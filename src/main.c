@@ -52,6 +52,13 @@ int main() {
         0,                                           // attackTimer
     };
 
+    Platforms platforms = {
+        {},
+        0
+    };
+
+    Portal portal;
+
     bool inGame = false;
     int level = 0;
     // ----
@@ -65,16 +72,16 @@ int main() {
 
         // Update level
         if (level == 0) {
-            platformLevel0();
-            portalLevel0();
+            platformsLevel0(&platforms);
+            portalLevel0(&portal);
         }
         if (level == 1) {
-            platformLevel1();
-            portalLevel1();
+            platformsLevel1(&platforms);
+            portalLevel1(&portal);
         }
         // Update player
         if (inGame) {
-            updateSamurai(&samurai);
+            updateSamurai(&samurai, &platforms);
         }
 
         BeginDrawing();
@@ -87,7 +94,7 @@ int main() {
                 if (level > MAX_LEVEL) {
                     renderVictory();
                 } else {
-                    if (samuraiPassesPortal(&samurai)) {
+                    if (samuraiPassesPortal(&samurai, &portal)) {
                         level++;
                     }
                     if (DEBUG_RAYLIB) {
@@ -95,7 +102,7 @@ int main() {
                             level++;
                         }
                     }
-                    renderGame(&samurai);
+                    renderGame(&samurai, &platforms, &portal);
                 }
             } else {
                 renderMenu(&samurai);
@@ -109,6 +116,8 @@ int main() {
     // Cleanup and close
     UnloadTexture(samurai.idleTexture);
     UnloadTexture(samurai.runTexture);
+    UnloadTexture(samurai.attackTexture);
+    UnloadTexture(samurai.hurtTexture);
     CloseWindow();
     return 0;
     // ----

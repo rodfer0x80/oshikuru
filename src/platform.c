@@ -2,32 +2,29 @@
 #include "config.h"
 #include "string.h"
 
-Platform platforms[MAX_PLATFORMS];
-int platformCount = 0;
-
-void newPlatform(int x, int y, int width, int height, Color color) {
-    if (platformCount < MAX_PLATFORMS) {
-        platforms[platformCount] =
+void newPlatform(Platforms *platforms, int x, int y, int width, int height, Color color) {
+    if (platforms->count < MAX_PLATFORMS) {
+        platforms->units[platforms->count] =
             (Platform){(Rectangle){x, y, width, height}, color};
-        platformCount++;
+        platforms->count++;
     }
 }
 
-void resetPlatforms() {
-    platformCount = 0;
-    memset(platforms, 0, MAX_PLATFORMS * sizeof(Platform));
+void resetPlatforms(Platforms *platforms) {
+    platforms->count = 0;
+    memset(platforms->units, 0, MAX_PLATFORMS * sizeof(platforms->units));
 }
 
-void platformLevel0() {
-    resetPlatforms();
-    newPlatform(0, SCREEN_HEIGHT - 12, SCREEN_WIDTH, 12, DARKBLUE);
-    newPlatform(700, 550, 50, 12, BROWN);
-    newPlatform(200, 400, 300, 12, YELLOW);
-    newPlatform(600, 300, 200, 12, GREEN);
-    newPlatform(600, 700, 200, 12, PURPLE);
+void platformsLevel0(Platforms *platforms) {
+    resetPlatforms(platforms);
+    newPlatform(platforms, 0, SCREEN_HEIGHT - 16, SCREEN_WIDTH, 16, DARKBLUE);
+    newPlatform(platforms, 700, 550, 50, 16, BROWN);
+    newPlatform(platforms, 200, 400, 300, 16, YELLOW);
+    newPlatform(platforms, 600, 300, 200, 16, GREEN);
+    newPlatform(platforms, 600, 700, 200, 16, PURPLE);
 }
 
-void platformLevel1() {
-    resetPlatforms();
-    newPlatform(0, SCREEN_HEIGHT - 12, SCREEN_WIDTH, 12, BLACK);
+void platformsLevel1(Platforms *platforms) {
+    resetPlatforms(platforms);
+    newPlatform(platforms, 0, SCREEN_HEIGHT - 16, SCREEN_WIDTH, 16, DARKBLUE);
 }

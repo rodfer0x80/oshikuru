@@ -9,11 +9,9 @@ typedef struct Portal {
     Color color;
 } Portal;
 
-extern Portal portal;
+void newPortal(Portal *portal, int x, int y, int width, int height, Color color);
 
-void newPortal(int x, int y, int width, int height, Color color);
-
-void portalLevel0();
-void portalLevel1();
+void portalLevel0(Portal *portal);
+void portalLevel1(Portal *portal);
 
 #endif // PORTAL_H

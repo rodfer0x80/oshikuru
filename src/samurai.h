@@ -4,6 +4,8 @@
 #include <stddef.h>
 
 #include "raylib.h"
+#include "platform.h"
+#include "portal.h"
 
 typedef struct Slash {
     Vector2 position;
@@ -39,9 +41,9 @@ typedef struct Samurai {
 
 void updateSamuraiAnimation(Samurai *samurai);
 void updateSamuraiMovement(Samurai *samurai);
-void updateSamuraiPhysics(Samurai *samurai);
-void updateSamurai(Samurai *samurai);
+void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms);
+void updateSamurai(Samurai *samurai, Platforms *platforms);
 void renderSamurai(Samurai *samurai);
-bool samuraiPassesPortal(Samurai *samurai);
+bool samuraiPassesPortal(Samurai *samurai, Portal *portal);
 
 #endif // SAMURAI_H

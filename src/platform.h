@@ -9,13 +9,15 @@ typedef struct Platform {
     Color color;
 } Platform;
 
-extern Platform platforms[MAX_PLATFORMS];
-extern int platformCount;
+typedef struct Platforms {
+    Platform units[MAX_PLATFORMS];
+    int count;
+} Platforms;
 
-void newPlatform(int x, int y, int width, int height, Color color);
-void resetPlatforms();
+void newPlatform(Platforms *platforms, int x, int y, int width, int height, Color color);
+void resetPlatforms(Platforms *platforms);
 
-void platformLevel0();
-void platformLevel1();
+void platformsLevel0(Platforms *platforms);
+void platformsLevel1(Platforms *platforms);
 
 #endif // PLATFORM_H

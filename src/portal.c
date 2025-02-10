@@ -2,17 +2,16 @@
 #include "raylib.h"
 #include "portal.h"
 
-Portal portal;
-
-void newPortal(int x, int y, int width, int height, Color color){
-    portal = (Portal){(Rectangle){x, y, width, height}, color};
+void newPortal(Portal *portal, int x, int y, int width, int height, Color color){
+    portal->rect = (Rectangle){x, y, width, height};
+    portal->color = color;
 }
 
-void portalLevel0(){
-    newPortal(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 80, 40, 80, BLACK);
+void portalLevel0(Portal *portal){
+    newPortal(portal, SCREEN_WIDTH - 40, SCREEN_HEIGHT - 80, 40, 80, BLACK);
 }
 
-void portalLevel1(){
-    newPortal(0, SCREEN_HEIGHT - 80, 40, 80, BLACK);
+void portalLevel1(Portal *portal){
+    newPortal(portal, 0, SCREEN_HEIGHT - 80, 40, 80, BLACK);
 }
 
