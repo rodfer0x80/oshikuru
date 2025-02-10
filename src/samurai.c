@@ -56,7 +56,7 @@ void updateSamuraiMovement(Samurai *samurai) {
     samurai->state.isRunning = isMoving;
 
     if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) &&
-        !samurai->state.isJumping && !samurai->state.isAttacking) {
+        !samurai->state.isJumping) {
         samurai->speed.y = samurai->stats.jumpStrength;
         samurai->state.isJumping = true;
     }
@@ -74,12 +74,15 @@ void updateSamuraiMovement(Samurai *samurai) {
             samurai->state.isDead = true;
         }
     }
-    if (DEBUG_RAYLIB && IsKeyPressed(KEY_X) && !samurai->state.isHurt) {
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_X)) {
         samurai->state.isHurt = true;
         samurai->stats.hitpoints -= SAMURAI_MAX_HITPOINTS;
         if (samurai->stats.hitpoints <= 0) {
             samurai->state.isDead = true;
         }
+    }
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_H)) {
+        samurai->stats.hitpoints = SAMURAI_MAX_HITPOINTS;
     }
 }
 
@@ -107,12 +110,10 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     }
 
     bool onPlatform = false;
-    for (int i = 0; i < platforms->count; i++) {
-        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
-                                 samurai->position.y + SAMURAI_Y_SLIM_MOD,
-                                 SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
-
-        
+    Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
+                             samurai->position.y + SAMURAI_Y_SLIM_MOD,
+                             SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
+    for (int i = 0; i < platforms->count; i++) { 
         if (CheckCollisionRecs(samuraiRect, platforms->units[i].rect)) {
             if (samurai->speed.y > 0 &&
                 samurai->position.y + SAMURAI_Y_MOD + SAMURAI_Y_REC >=
@@ -128,11 +129,11 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
         }
     }
 
+    if (!samurai->state.isHurt) {
+        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
+                                 samurai->position.y + SAMURAI_Y_SLIM_MOD,
+                                 SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
     for (int i = 0; i < fires->count; i++) {
-        if (!samurai->state.isHurt) {
-            Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
-                                     samurai->position.y + SAMURAI_Y_SLIM_MOD,
-                                     SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
             if (CheckCollisionRecs(samuraiRect, fires->units[i].rect)) {
                 samurai->state.isHurt = true;
                 samurai->stats.hitpoints -= fires->units[i].damage;

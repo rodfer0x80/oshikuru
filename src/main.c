@@ -1,12 +1,12 @@
 #include "raylib.h"
 #include "resource_dir.h"
 
+#include "assets.h"
 #include "config.h"
 #include "fire.h"
 #include "game.h"
 #include "platform.h"
 #include "portal.h"
-#include "assets.h"
 #include "samurai.h"
 
 int main() {
@@ -31,10 +31,9 @@ int main() {
 
     // Game data
     Samurai samurai = {
-        .position = {SCREEN_WIDTH,
-                     SCREEN_HEIGHT},         // position
-        .speed = {8.0f, 0.0f},                               // speed
-        .stats = {100, 20, -20.0f, 1.2f},                    // stats
+        .position = {SCREEN_WIDTH, SCREEN_HEIGHT},          // position
+        .speed = {8.0f, 0.0f},                              // speed
+        .stats = {100, 20, -20.0f, 1.2f},                   // stats
         .state = {true, false, false, false, false, false}, // state
         .animation =
             {// animation
@@ -50,6 +49,7 @@ int main() {
     Portal portal;
     bool inGame = false;
     int level = 0;
+    int nextLevel = true;
     // ----
 
     // Main loop
@@ -60,12 +60,20 @@ int main() {
         }
 
         // Update level
-        if (level == 0) {
+        if (level == 0 && nextLevel) {
+            nextLevel = false;
+            samurai.position.x = SCREEN_WIDTH;
+            samurai.position.y = SCREEN_HEIGHT;
+            samurai.state.facingLeft = true;
             platformsLevel0(&platforms);
             firesLevel0(&fires);
             portalLevel0(&portal);
         }
-        if (level == 1) {
+        if (level == 1 && nextLevel) {
+            nextLevel = false;
+            samurai.position.x = SCREEN_WIDTH;
+            samurai.position.y = SCREEN_HEIGHT;
+            samurai.state.facingLeft = true;
             platformsLevel1(&platforms);
             firesLevel1(&fires);
             portalLevel1(&portal);
@@ -87,10 +95,12 @@ int main() {
                 } else {
                     if (samuraiPassesPortal(&samurai, &portal)) {
                         level++;
+                        nextLevel = true;
                     }
                     if (DEBUG_RAYLIB) {
                         if (IsKeyPressed(KEY_N)) {
                             level++;
+                            nextLevel = true;
                         }
                     }
                     renderGame(&samurai, &platforms, &fires, &portal);

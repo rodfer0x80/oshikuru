@@ -21,6 +21,7 @@ void platformsLevel0(Platforms *platforms) {
     newPlatform(platforms, 900, 700, 100, 16, BLUE);
     newPlatform(platforms, 700, 450, 100, 16, BROWN);
     newPlatform(platforms, 200, 350, 300, 16, YELLOW);
+    newPlatform(platforms, 800, 350, 300, 16, YELLOW);
     newPlatform(platforms, 600, 600, 200, 16, PURPLE);
     newPlatform(platforms, 600, 200, 200, 16, GREEN);
 }

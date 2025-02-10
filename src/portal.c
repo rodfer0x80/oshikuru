@@ -8,7 +8,7 @@ void newPortal(Portal *portal, int x, int y, int width, int height, Color color)
 }
 
 void portalLevel0(Portal *portal){
-    newPortal(portal, 760, 120, 40, 80, BLACK);
+    newPortal(portal, 330, 270, 40, 80, BLACK);
 }
 
 void portalLevel1(Portal *portal){
