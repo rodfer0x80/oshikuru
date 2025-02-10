@@ -1,13 +1,13 @@
-#include "stddef.h"
-#include "raylib.h"
+#include "assets.h"
 #include "config.h"
-#include "resources.h"
+#include "raylib.h"
+#include "stddef.h"
 
 Texture2D loadTexture(char *textureFilename, int frameCount, int frameSize) {
     Image textureImage = LoadImage(textureFilename);
     if (textureImage.data == NULL) {
         TraceLog(LOG_ERROR,
-                 TextFormat("Failed to load resource: '%s'", textureFilename));
+                 TextFormat("Failed to load asset: '%s'", textureFilename));
         return (Texture2D){0};
     }
     ImageResize(&textureImage, frameCount * frameSize, frameSize);

@@ -4,7 +4,8 @@
 #include "raylib.h"
 #include "samurai.h"
 
-void renderGame(Samurai *samurai, Platforms *platforms, Portal *portal);
+void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
+                Portal *portal);
 void renderMenu(Samurai *samurai);
 void renderVictory();
 void renderDefeat();

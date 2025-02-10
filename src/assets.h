@@ -1,5 +1,5 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
+#ifndef ASSETS_H
+#define ASSETS_H
 
 #include "raylib.h"
 
@@ -9,4 +9,4 @@ Texture2D loadSamuraiRunTexture();
 Texture2D loadSamuraiAttackTexture();
 Texture2D loadSamuraiHurtTexture();
 
-#endif // RESOURCES_H
+#endif // ASSETS_H

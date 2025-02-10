@@ -6,7 +6,7 @@
 #include "game.h"
 #include "platform.h"
 #include "portal.h"
-#include "assets.h"
+#include "resources.h"
 #include "samurai.h"
 
 int main() {
@@ -14,7 +14,6 @@ int main() {
     SearchAndSetResourceDir("resources");
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
     SetTargetFPS(FPS);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OSHIKURU");
     // ----
 
     // Load resources
@@ -31,11 +30,12 @@ int main() {
 
     // Game data
     Samurai samurai = {
-        .position = {SCREEN_WIDTH,
-                     SCREEN_HEIGHT},         // position
+        .position = {SCREEN_WIDTH / 2.0f - SAMURAI_FRAME_SIZE / 2.0f,
+                     SCREEN_HEIGHT / 2.0f -
+                         SAMURAI_FRAME_SIZE / 2.0f},         // position
         .speed = {8.0f, 0.0f},                               // speed
         .stats = {100, 20, -20.0f, 1.2f},                    // stats
-        .state = {true, false, false, false, false, false}, // state
+        .state = {false, false, false, false, false, false}, // state
         .animation =
             {// animation
              .frameIndex = 0,
@@ -53,6 +53,7 @@ int main() {
     // ----
 
     // Main loop
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OSHIKURU");
     while (!WindowShouldClose()) {
         // Listen for <ESQ> or <ENTER> for quit or menu
         if (IsKeyPressed(KEY_ENTER) && !samurai.state.isDead) {
@@ -107,10 +108,10 @@ int main() {
     // Cleanup and close
     resetPlatforms(&platforms);
     resetFires(&fires);
-    UnloadTexture(samurai.animation.assets.idleTexture);
-    UnloadTexture(samurai.animation.assets.runTexture);
-    UnloadTexture(samurai.animation.assets.attackTexture);
-    UnloadTexture(samurai.animation.assets.hurtTexture);
+    UnloadTexture(samuraiIdleTexture);
+    UnloadTexture(samuraiRunTexture);
+    UnloadTexture(samuraiAttackTexture);
+    UnloadTexture(samuraiHurtTexture);
     CloseWindow();
     return 0;
     // ----
