@@ -5,7 +5,7 @@
 #include "samurai.h"
 
 void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
-                Portal *portal);
+                Portal *portal, float *timer);
 void renderMenu(Samurai *samurai);
 void renderVictory();
 void renderDefeat();

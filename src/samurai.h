@@ -35,6 +35,7 @@ typedef struct SamuraiState {
     bool isAttacking;
     bool isHurt;
     bool isDead;
+    bool isImmune;
 } SamuraiState;
 
 typedef struct SamuraiSlash {

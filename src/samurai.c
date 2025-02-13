@@ -69,9 +69,11 @@ void updateSamuraiMovement(Samurai *samurai) {
 
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->state.isHurt) {
         samurai->state.isHurt = true;
-        samurai->stats.hitpoints -= 1;
-        if (samurai->stats.hitpoints <= 0) {
-            samurai->state.isDead = true;
+        if (!samurai->state.isImmune) {
+            samurai->stats.hitpoints -= 1;
+            if (samurai->stats.hitpoints <= 0) {
+                samurai->state.isDead = true;
+            }
         }
     }
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_X)) {
@@ -83,6 +85,10 @@ void updateSamuraiMovement(Samurai *samurai) {
     }
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_H)) {
         samurai->stats.hitpoints = SAMURAI_MAX_HITPOINTS;
+    }
+    
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_I)) {
+        samurai->state.isImmune = !samurai->state.isImmune;
     }
 }
 
@@ -133,10 +139,16 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
 
     for (int i = 0; i < fires->count; i++) {
         if (CheckCollisionRecs(samuraiRect, fires->units[i].rect)) {
-            samurai->state.isHurt = true;
-            samurai->stats.hitpoints -= fires->units[i].damage;
+            if (!samurai->state.isHurt) {
+                samurai->state.isHurt = true;
+                if (!samurai->state.isImmune) {
+                    samurai->stats.hitpoints -= fires->units[i].damage;
+                }
+            }
             if (samurai->stats.hitpoints <= 0) {
-                samurai->state.isDead = true;
+                if (!samurai->state.isImmune) {
+                    samurai->state.isDead = true;
+                }
             }
         }
     }

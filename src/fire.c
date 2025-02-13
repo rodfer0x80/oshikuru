@@ -44,7 +44,7 @@ void firesLevel0(Fires *fires) {
 void firesLevel1(Fires *fires) {
     int fireWidth = SCREEN_WIDTH;
     int fireHeight = 20;
-    Vector2 fire1Position = {0, SCREEN_WIDTH - fireHeight};
+    Vector2 fire1Position = {0, SCREEN_HEIGHT - fireHeight};
     Color fireColor = ORANGE;
     int fireDamage = 2;
 

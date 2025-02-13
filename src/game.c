@@ -5,10 +5,14 @@
 #include "samurai.h"
 
 void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
-                Portal *portal) {
+                Portal *portal, float *timer) {
     ClearBackground(GRAY);
 
-    DrawText(TextFormat("HP: %d", samurai->stats.hitpoints), 40, 40, 40,
+    DrawText(TextFormat("[HP: %d]", samurai->stats.hitpoints), SCREEN_WIDTH - 180, 40, 40,
+             DARKBLUE);
+    
+    *timer += GetFrameTime();
+    DrawText(TextFormat("[T: %.0f]", *timer), 40, 40, 40,
              DARKBLUE);
 
     for (int i = 0; i < platforms->count; i++) {

@@ -50,6 +50,7 @@ int main() {
     bool inGame = false;
     int level = 0;
     int nextLevel = true;
+    float timer = 0.0;
     // ----
 
     // Main loop
@@ -58,22 +59,44 @@ int main() {
         if (IsKeyPressed(KEY_ENTER) && !samurai.state.isDead) {
             inGame = !inGame;
         }
+        // DEBUG: level jump
+        if (DEBUG_RAYLIB) {
+            if (IsKeyPressed(KEY_N)) {
+                if (level + 1 <= MAX_LEVEL){
+                    level++;
+                    nextLevel = true;
+                }
+            }
+            if (IsKeyPressed(KEY_P)) {
+                if (level - 1 >= 0) {
+                    level--;
+                    nextLevel = true;
+                }
+            }
+            if (IsKeyPressed(KEY_R)) {
+                nextLevel = true;
+            }
+        }
 
         // Update level
         if (level == 0 && nextLevel) {
+            timer = 0.0;
             nextLevel = false;
             samurai.position.x = SCREEN_WIDTH;
             samurai.position.y = SCREEN_HEIGHT;
             samurai.state.facingLeft = true;
+            samurai.stats.hitpoints = 100;
             platformsLevel0(&platforms);
             firesLevel0(&fires);
             portalLevel0(&portal);
         }
         if (level == 1 && nextLevel) {
+            timer = 0.0;
             nextLevel = false;
             samurai.position.x = SCREEN_WIDTH;
             samurai.position.y = SCREEN_HEIGHT;
             samurai.state.facingLeft = true;
+            samurai.stats.hitpoints = 100;
             platformsLevel1(&platforms);
             firesLevel1(&fires);
             portalLevel1(&portal);
@@ -97,13 +120,7 @@ int main() {
                         level++;
                         nextLevel = true;
                     }
-                    if (DEBUG_RAYLIB) {
-                        if (IsKeyPressed(KEY_N)) {
-                            level++;
-                            nextLevel = true;
-                        }
-                    }
-                    renderGame(&samurai, &platforms, &fires, &portal);
+                    renderGame(&samurai, &platforms, &fires, &portal, &timer);
                 }
             } else {
                 renderMenu(&samurai);
