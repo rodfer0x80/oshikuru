@@ -2,7 +2,10 @@
 #define SAMURAI_H
 
 #include <stddef.h>
+
 #include "raylib.h"
+
+#include "config.h"
 #include "fire.h"
 #include "platform.h"
 #include "portal.h"
@@ -22,8 +25,8 @@ typedef struct SamuraiAnimation {
 } SamuraiAnimation;
 
 typedef struct SamuraiStats {
-    int hitpoints;
-    int damage;
+    float hitpoints;
+    float damage;
     float jumpStrength;
     float gravityEffect;
 } SamuraiStats;
@@ -42,13 +45,19 @@ typedef struct SamuraiSlash {
     Vector2 position;
     float width;
     float height;
-    int damage;
+    float damage;
     bool isActive;
 } SamuraiSlash;
+
+typedef struct SamuraiHitbox {
+    Rectangle rec;
+    Rectangle slimRec;
+} SamuraiHitbox;
 
 typedef struct Samurai {
     Vector2 position;
     Vector2 speed;
+    SamuraiHitbox hitbox;
     SamuraiStats stats;
     SamuraiState state;
     SamuraiAnimation animation;
@@ -56,10 +65,13 @@ typedef struct Samurai {
 } Samurai;
 
 void updateSamuraiAnimation(Samurai *samurai);
+
 void updateSamuraiMovement(Samurai *samurai);
+
 void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms, Fires *fires);
+
 void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires);
-void renderSamurai(Samurai *samurai);
+
 bool samuraiPassesPortal(Samurai *samurai, Portal *portal);
 
 #endif // SAMURAI_H

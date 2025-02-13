@@ -1,11 +1,4 @@
-#include "stddef.h"
-#include "string.h"
-
-#include "raylib.h"
-#include "string.h"
-
 #include "platform.h"
-#include "config.h"
 
 void newPlatform(Platforms *platforms, Vector2 position, int width, int height,
                  Color color) {
@@ -26,8 +19,6 @@ void resetPlatforms(Platforms *platforms) {
 }
 
 void platformsLevel0(Platforms *platforms) {
-    resetPlatforms(platforms);
-
     int platformHeight = 16;
     Vector2 groundPlatformPosition = {0, SCREEN_HEIGHT - platformHeight};
     Vector2 platform1Position = {900, 700};
@@ -36,6 +27,8 @@ void platformsLevel0(Platforms *platforms) {
     Vector2 platform4Position = {800, 350};
     Vector2 platform5Position = {600, 600};
     Vector2 platform6Position = {600, 200};
+
+    resetPlatforms(platforms);
 
     newPlatform(platforms, groundPlatformPosition, SCREEN_WIDTH, platformHeight,
                 DARKBLUE);
@@ -48,10 +41,10 @@ void platformsLevel0(Platforms *platforms) {
 }
 
 void platformsLevel1(Platforms *platforms) {
-    resetPlatforms(platforms);
-
     int platformHeight = 16;
     Vector2 groundPlatformPosition = {0, SCREEN_HEIGHT - platformHeight};
+
+    resetPlatforms(platforms);
 
     newPlatform(platforms, groundPlatformPosition, SCREEN_WIDTH, platformHeight,
                 DARKBLUE);

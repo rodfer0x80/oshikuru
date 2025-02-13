@@ -1,9 +1,3 @@
-#include "stddef.h"
-#include "string.h"
-
-#include "raylib.h"
-
-#include "config.h"
 #include "fire.h"
 
 void newFire(Fires *fires, Vector2 *position, int width, int height,

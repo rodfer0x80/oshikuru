@@ -19,9 +19,11 @@ typedef struct Platforms {
 } Platforms;
 
 void newPlatform(Platforms *platforms, Vector2 position, int width, int height, Color color);
+
 void resetPlatforms(Platforms *platforms);
 
 void platformsLevel0(Platforms *platforms);
+
 void platformsLevel1(Platforms *platforms);
 
 #endif // PLATFORM_H

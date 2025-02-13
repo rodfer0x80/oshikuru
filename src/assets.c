@@ -1,7 +1,4 @@
 #include "assets.h"
-#include "config.h"
-#include "raylib.h"
-#include "stddef.h"
 
 Texture2D loadTexture(char *textureFilename, int frameCount, int frameSize) {
     Image textureImage = LoadImage(textureFilename);

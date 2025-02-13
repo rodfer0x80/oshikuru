@@ -1,12 +1,11 @@
-#include "raylib.h"
-
-#include "config.h"
-#include "platform.h"
-#include "portal.h"
 #include "samurai.h"
 
 void updateSamuraiAnimation(Samurai *samurai) {
+    // Update tempo
     samurai->animation.frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
+    // ----
+    
+    // Update animation
     if (samurai->animation.frameCounter >= 1.0f) {
         int frameCount;
         if (samurai->state.isHurt) {
@@ -18,7 +17,7 @@ void updateSamuraiAnimation(Samurai *samurai) {
         } else {
             frameCount = SAMURAI_IDLE_FRAME_COUNT;
         }
-
+        
         samurai->animation.frameIndex++;
         samurai->animation.frameCounter = 0.0f;
 
@@ -35,13 +34,16 @@ void updateSamuraiAnimation(Samurai *samurai) {
             samurai->animation.frameIndex %= frameCount;
         }
     }
+    // ---- 
 }
 
 void updateSamuraiMovement(Samurai *samurai) {
-    if (samurai->state.isHurt) {
+    // Disable attacking while hurt animation is running
+    if (samurai->state.isHurt)
         samurai->state.isAttacking = false;
-    }
-
+    // ----
+    
+    // Controls
     bool isMoving = false;
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
         samurai->position.x -= samurai->speed.x;
@@ -54,75 +56,78 @@ void updateSamuraiMovement(Samurai *samurai) {
         isMoving = true;
     }
     samurai->state.isRunning = isMoving;
-
     if ((IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) &&
         !samurai->state.isJumping) {
         samurai->speed.y = samurai->stats.jumpStrength;
         samurai->state.isJumping = true;
     }
-
     if (IsKeyPressed(KEY_SPACE) && !samurai->state.isAttacking) {
         samurai->state.isAttacking = true;
         samurai->animation.frameIndex = 0;
         samurai->animation.attackFrame = 0.0f;
     }
+    // ----
 
+    // DEBUG controls
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->state.isHurt) {
         samurai->state.isHurt = true;
         if (!samurai->state.isImmune) {
-            samurai->stats.hitpoints -= 1;
-            if (samurai->stats.hitpoints <= 0) {
+            samurai->stats.hitpoints -= 10;
+            if (samurai->stats.hitpoints <= 0.0)
                 samurai->state.isDead = true;
-            }
         }
     }
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_X)) {
         samurai->state.isHurt = true;
         samurai->stats.hitpoints -= SAMURAI_MAX_HITPOINTS;
-        if (samurai->stats.hitpoints <= 0) {
+        if (samurai->stats.hitpoints <= 0.0)
             samurai->state.isDead = true;
-        }
     }
-    if (DEBUG_RAYLIB && IsKeyPressed(KEY_H)) {
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_H))
         samurai->stats.hitpoints = SAMURAI_MAX_HITPOINTS;
-    }
-    
-    if (DEBUG_RAYLIB && IsKeyPressed(KEY_I)) {
+    if (DEBUG_RAYLIB && IsKeyPressed(KEY_I))
         samurai->state.isImmune = !samurai->state.isImmune;
-    }
+    // ----
 }
 
 void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
                           Fires *fires) {
+    // Update slim rectangle
+    Rectangle samuraiSlimRec = {samurai->position.x + SAMURAI_X_SLIM_MOD,
+                                samurai->position.y + SAMURAI_Y_SLIM_MOD,
+                                SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
+    samurai->hitbox.slimRec = samuraiSlimRec;
+    // ----
+
+    // Update gravity application
     samurai->speed.y += samurai->stats.gravityEffect;
     samurai->position.y += samurai->speed.y;
+    // ----
 
+    // Attack physics
     if (samurai->state.isAttacking &&
         samurai->animation.frameIndex == SAMURAI_SLASH_FRAME &&
         !samurai->slash.isActive) {
-        // TODO: sep and add to slash instead of doing a mash and converting to
-        // a slash
-        samurai->slash = (SamuraiSlash){
+        SamuraiSlash samuraiSlash = {
             {samurai->position.x + SAMURAI_X_MOD +
                  (samurai->state.facingLeft ? -SAMURAI_ATTACK_RANGE : 0),
              samurai->position.y + SAMURAI_Y_MOD},
             SAMURAI_X_REC + SAMURAI_ATTACK_RANGE,
             SAMURAI_Y_REC,
-            samurai->stats.damage,
+            samurai->stats.damage / SAMURAI_ATTACK_FRAME_COUNT,
             true};
+        samurai->slash = samuraiSlash;
     } else if (samurai->animation.frameIndex < SAMURAI_SLASH_FRAME ||
                samurai->animation.frameIndex >= SAMURAI_ATTACK_FRAME_COUNT) {
         samurai->slash.isActive = false;
     }
+    // ----
 
-    // TODO : make samuraiSlimRec and SamuraiRec things in Samurai
-    // that are updated here, dont recalc here many times or again in game
-    Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
-                             samurai->position.y + SAMURAI_Y_SLIM_MOD,
-                             SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
+    // Map platform collision physics
     bool onPlatform = false;
     for (int i = 0; i < platforms->count; i++) {
-        if (CheckCollisionRecs(samuraiRect, platforms->units[i].rect)) {
+        if (CheckCollisionRecs(samurai->hitbox.slimRec,
+                               platforms->units[i].rect)) {
             if (samurai->speed.y > 0 &&
                 samurai->position.y + SAMURAI_Y_MOD + SAMURAI_Y_REC >=
                     platforms->units[i].rect.y) {
@@ -130,45 +135,47 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
                     platforms->units[i].rect.y - SAMURAI_Y_MOD - SAMURAI_Y_REC;
                 samurai->speed.y = 0;
                 onPlatform = true;
-                if (samurai->state.isJumping) {
-                    samurai->state.isJumping = false;
-                }
+                samurai->state.isJumping = false;
             }
         }
     }
+    // ----
 
+    // Map fire collision physics
     for (int i = 0; i < fires->count; i++) {
-        if (CheckCollisionRecs(samuraiRect, fires->units[i].rect)) {
+        if (CheckCollisionRecs(samurai->hitbox.slimRec, fires->units[i].rect)) {
             if (!samurai->state.isHurt) {
                 samurai->state.isHurt = true;
-                if (!samurai->state.isImmune) {
+                if (!samurai->state.isImmune)
                     samurai->stats.hitpoints -= fires->units[i].damage;
-                }
             }
-            if (samurai->stats.hitpoints <= 0) {
-                if (!samurai->state.isImmune) {
+            if (samurai->stats.hitpoints <= 0.0) {
+                if (!samurai->state.isImmune)
                     samurai->state.isDead = true;
-                }
             }
         }
     }
+    // ----
 
+    // Jump detection
     if (!onPlatform &&
         samurai->position.y - SAMURAI_Y_MOD - SAMURAI_Y_REC < SCREEN_HEIGHT) {
         samurai->state.isJumping = true;
     }
+    // ----
 
+    // Map border collision
     if (samurai->position.x <= 0 - SAMURAI_X_MOD)
         samurai->position.x = 0 - SAMURAI_X_MOD;
     if (samurai->position.x >= SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC)
         samurai->position.x = SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC;
-    if (samurai->position.y <= 0 - SAMURAI_Y_MOD) {
+    if (samurai->position.y <= 0 - SAMURAI_Y_MOD)
         samurai->position.y = 0 - SAMURAI_Y_MOD;
-    }
     if (samurai->position.y >= SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC) {
         samurai->position.y = SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC;
         samurai->speed.y = 0;
     }
+    // ----
 }
 
 void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires) {
@@ -178,30 +185,12 @@ void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires) {
 }
 
 bool samuraiPassesPortal(Samurai *samurai, Portal *portal) {
-    Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_MOD,
-                             samurai->position.y + SAMURAI_Y_MOD, SAMURAI_X_REC,
-                             SAMURAI_Y_REC};
-    return CheckCollisionRecs(samuraiRect, portal->rect);
+    // Update samurai rec hitbox
+    Rectangle samuraiRec = {samurai->position.x + SAMURAI_X_MOD,
+                            samurai->position.y + SAMURAI_Y_MOD, SAMURAI_X_REC,
+                            SAMURAI_Y_REC};
+    samurai->hitbox.rec = samuraiRec;
+    // ----
+    return CheckCollisionRecs(samurai->hitbox.rec, portal->rect);
 }
 
-void renderSamurai(Samurai *samurai) {
-    Rectangle sourceRect = {
-        samurai->animation.frameIndex * SAMURAI_FRAME_SIZE, 0,
-        samurai->state.facingLeft ? -SAMURAI_FRAME_SIZE : SAMURAI_FRAME_SIZE,
-        SAMURAI_FRAME_SIZE};
-    Rectangle destRect = {samurai->position.x, samurai->position.y,
-                          SAMURAI_FRAME_SIZE, SAMURAI_FRAME_SIZE};
-
-    Texture2D texture;
-    if (samurai->state.isHurt) {
-        texture = samurai->animation.assets.hurtTexture;
-    } else if (samurai->state.isAttacking) {
-        texture = samurai->animation.assets.attackTexture;
-    } else if (samurai->state.isRunning) {
-        texture = samurai->animation.assets.runTexture;
-    } else {
-        texture = samurai->animation.assets.idleTexture;
-    }
-
-    DrawTexturePro(texture, sourceRect, destRect, (Vector2){0, 0}, 0.0f, WHITE);
-}

@@ -7,6 +7,7 @@
 #include "game.h"
 #include "platform.h"
 #include "portal.h"
+#include "npc.h"
 #include "samurai.h"
 
 int main() {
@@ -31,21 +32,23 @@ int main() {
 
     // Game data
     Samurai samurai = {
-        .position = {SCREEN_WIDTH, SCREEN_HEIGHT},          // position
-        .speed = {8.0f, 0.0f},                              // speed
-        .stats = {100, 20, -20.0f, 1.2f},                   // stats
-        .state = {true, false, false, false, false, false}, // state
+        .position = {SCREEN_WIDTH, SCREEN_HEIGHT},          
+        .speed = {8.0f, 0.0f},                              
+        .hitbox = {{}, {}},                              
+        .stats = {100.0f, 20.0f, -20.0f, 1.2f},                   
+        .state = {true, false, false, false, false, false}, 
         .animation =
-            {// animation
+            {
              .frameIndex = 0,
              .frameCounter = 0.0f,
              .attackFrame = 0,
              .assets = {samuraiIdleTexture, samuraiRunTexture,
                         samuraiAttackTexture, samuraiHurtTexture}},
-        .slash = {{0, 0}, 0.0f, 0.0f, 0, false} // slash
+        .slash = {{0, 0}, 0.0f, 0.0f, 0.0f, false} 
     };
     Platforms platforms = {{}, 0};
     Fires fires = {{}, 0};
+    NPCS npcs = {{}, 0};
     Portal portal;
     bool inGame = false;
     int level = 0;
@@ -89,6 +92,7 @@ int main() {
             platformsLevel0(&platforms);
             firesLevel0(&fires);
             portalLevel0(&portal);
+            npcsLevel0(&npcs);
         }
         if (level == 1 && nextLevel) {
             timer = 0.0;
@@ -100,14 +104,18 @@ int main() {
             platformsLevel1(&platforms);
             firesLevel1(&fires);
             portalLevel1(&portal);
+            npcsLevel1(&npcs);
         }
         // Update player
         if (inGame) {
             updateSamurai(&samurai, &platforms, &fires);
+            updateNPCS(&npcs, &samurai);
         }
+        // ----
 
         BeginDrawing();
-
+        
+        // Game logic
         if (samurai.state.isDead) {
             inGame = false;
             renderDefeat();
@@ -120,12 +128,13 @@ int main() {
                         level++;
                         nextLevel = true;
                     }
-                    renderGame(&samurai, &platforms, &fires, &portal, &timer);
+                    renderGame(&samurai, &platforms, &fires, &portal, &npcs, &timer);
                 }
             } else {
                 renderMenu(&samurai);
             }
         }
+        // ----
 
         EndDrawing();
     }
@@ -134,11 +143,14 @@ int main() {
     // Cleanup and close
     resetPlatforms(&platforms);
     resetFires(&fires);
+    // TODO: (research) unload main texture like idleTexture 
+    // or samurai pointer is same?
     UnloadTexture(samurai.animation.assets.idleTexture);
     UnloadTexture(samurai.animation.assets.runTexture);
     UnloadTexture(samurai.animation.assets.attackTexture);
     UnloadTexture(samurai.animation.assets.hurtTexture);
     CloseWindow();
-    return 0;
     // ----
+    
+    return 0;
 }

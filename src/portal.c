@@ -1,5 +1,3 @@
-#include "stddef.h"
-#include "raylib.h"
 #include "portal.h"
 
 void newPortal(Portal *portal, int x, int y, int width, int height, Color color){

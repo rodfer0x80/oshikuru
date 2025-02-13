@@ -7,12 +7,13 @@
 #include "raylib.h"
 
 #include "config.h"
+#include "samurai.h"
 
 typedef struct NPC {
     Rectangle rect;
     Color color;
-    int damage;
-    int hitpoints;
+    float hitpoints;
+    float damage;
 } NPC;
 
 typedef struct NPCS {
@@ -20,8 +21,10 @@ typedef struct NPCS {
     int count;
 } NPCS;
 
+void removeNPC(NPCS *npcs, int n);
+void updateNPCS(NPCS *npcs, Samurai *samurai);
 void newNPC(NPCS *npcs, Vector2 *position, int width, int height, Color color,
-             int damage);
+             float hitpoints, float damage);
 void resetNPCS(NPCS *npcs);
 
 void npcsLevel0(NPCS *npcs);
