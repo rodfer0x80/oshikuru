@@ -1,8 +1,12 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#include "config.h"
+#include "stddef.h"
+#include "string.h"
+
 #include "raylib.h"
+
+#include "config.h"
 
 typedef struct Platform {
     Rectangle rect;
@@ -14,7 +18,7 @@ typedef struct Platforms {
     int count;
 } Platforms;
 
-void newPlatform(Platforms *platforms, int x, int y, int width, int height, Color color);
+void newPlatform(Platforms *platforms, Vector2 position, int width, int height, Color color);
 void resetPlatforms(Platforms *platforms);
 
 void platformsLevel0(Platforms *platforms);

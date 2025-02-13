@@ -2,9 +2,7 @@
 #define SAMURAI_H
 
 #include <stddef.h>
-
 #include "raylib.h"
-
 #include "fire.h"
 #include "platform.h"
 #include "portal.h"

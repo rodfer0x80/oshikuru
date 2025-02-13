@@ -109,11 +109,13 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
         samurai->slash.isActive = false;
     }
 
-    bool onPlatform = false;
+    // TODO : make samuraiSlimRec and SamuraiRec things in Samurai
+    // that are updated here, dont recalc here many times or again in game
     Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
                              samurai->position.y + SAMURAI_Y_SLIM_MOD,
                              SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
-    for (int i = 0; i < platforms->count; i++) { 
+    bool onPlatform = false;
+    for (int i = 0; i < platforms->count; i++) {
         if (CheckCollisionRecs(samuraiRect, platforms->units[i].rect)) {
             if (samurai->speed.y > 0 &&
                 samurai->position.y + SAMURAI_Y_MOD + SAMURAI_Y_REC >=
@@ -129,17 +131,12 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
         }
     }
 
-    if (!samurai->state.isHurt) {
-        Rectangle samuraiRect = {samurai->position.x + SAMURAI_X_SLIM_MOD,
-                                 samurai->position.y + SAMURAI_Y_SLIM_MOD,
-                                 SAMURAI_X_SLIM_REC, SAMURAI_Y_SLIM_REC};
     for (int i = 0; i < fires->count; i++) {
-            if (CheckCollisionRecs(samuraiRect, fires->units[i].rect)) {
-                samurai->state.isHurt = true;
-                samurai->stats.hitpoints -= fires->units[i].damage;
-                if (samurai->stats.hitpoints <= 0) {
-                    samurai->state.isDead = true;
-                }
+        if (CheckCollisionRecs(samuraiRect, fires->units[i].rect)) {
+            samurai->state.isHurt = true;
+            samurai->stats.hitpoints -= fires->units[i].damage;
+            if (samurai->stats.hitpoints <= 0) {
+                samurai->state.isDead = true;
             }
         }
     }
@@ -155,7 +152,6 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
         samurai->position.x = SCREEN_WIDTH - SAMURAI_X_MOD - SAMURAI_X_REC;
     if (samurai->position.y <= 0 - SAMURAI_Y_MOD) {
         samurai->position.y = 0 - SAMURAI_Y_MOD;
-        samurai->speed.y = 0;
     }
     if (samurai->position.y >= SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC) {
         samurai->position.y = SCREEN_HEIGHT - SAMURAI_Y_MOD - SAMURAI_Y_REC;

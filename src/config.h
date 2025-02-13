@@ -6,10 +6,10 @@
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800
 
-#define FPS 48
+#define FPS 60
 
 #define SAMURAI_FRAME_SIZE 200
-#define SAMURAI_ANIMATION_SPEED 32
+#define SAMURAI_ANIMATION_SPEED 12
 
 #define SAMURAI_RUN_TEXTURE "samurai_run.png"
 #define SAMURAI_RUN_FRAME_COUNT 16
@@ -41,6 +41,8 @@
 
 #define MAX_PLATFORMS 10
 
-#define MAX_FIRES 10
+#define MAX_FIRES 255
+
+#define MAX_NPCS 127
 
 #endif // CONFIG_H

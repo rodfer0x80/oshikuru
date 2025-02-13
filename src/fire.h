@@ -1,8 +1,12 @@
 #ifndef FIRE_H
 #define FIRE_H
 
-#include "config.h"
+#include "stddef.h"
+#include "string.h"
+
 #include "raylib.h"
+
+#include "config.h"
 
 typedef struct Fire {
     Rectangle rect;
@@ -15,7 +19,7 @@ typedef struct Fires {
     int count;
 } Fires;
 
-void newFire(Fires *fires, int x, int y, int width, int height, Color color,
+void newFire(Fires *fires, Vector2 *position, int width, int height, Color color,
              int damage);
 void resetFires(Fires *fires);
 
