@@ -1,14 +1,14 @@
 #include "raylib.h"
-#include "resource_dir.h"
 
-#include "assets/assets.h"
-#include "config/config.h"
-#include "map/fire/fire.h"
-#include "game.h"
-#include "characters/npc.h"
-#include "map/platform.h"
-#include "map/portal.h"
-#include "characters/samurai.h"
+#include "config.h"
+#include "engine/assets.h"
+#include "engine/render.h"
+#include "entities/npc.h"
+#include "entities/samurai.h"
+#include "utils/resource_dir.h"
+#include "world/fire.h"
+#include "world/platform.h"
+#include "world/portal.h"
 
 void runLevel(int *level, float *timer, bool *nextLevel, Samurai *samurai,
               Platforms *platforms, Fires *fires, NPCS *npcs, Portal *portal) {

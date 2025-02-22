@@ -1,4 +1,4 @@
-#include "fire.h"
+#include "world/fire.h"
 
 void newFire(Fires *fires, Vector2 *position, int width, int height,
              Color color, int damage) {

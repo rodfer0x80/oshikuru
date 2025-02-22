@@ -1,4 +1,4 @@
-#include "game.h"
+#include "engine/render.h"
 
 // TODO: change name from game to render for consistency
 // TODO: render player and npcs healthbars on top of heads red/black

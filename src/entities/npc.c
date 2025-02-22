@@ -1,4 +1,4 @@
-#include "npc.h"
+#include "entities/npc.h"
 
 void removeNPC(NPCS *npcs, int n) {
     for (int j = n; j < npcs->count - 1; j++) {

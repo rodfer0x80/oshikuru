@@ -1,4 +1,4 @@
-#include "samurai.h"
+#include "entities/samurai.h"
 
 void samuraiHitFor(Samurai *samurai, float damage) {
     float diffHitpoints;

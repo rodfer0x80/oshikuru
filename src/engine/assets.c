@@ -1,4 +1,4 @@
-#include "assets.h"
+#include "engine/assets.h"
 
 Texture2D loadTexture(char *textureFilename, int frameCount, int frameSize) {
     Image textureImage = LoadImage(textureFilename);

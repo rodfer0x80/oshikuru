@@ -1,4 +1,4 @@
-#include "portal.h"
+#include "world/portal.h"
 
 void newPortal(Portal *portal, int x, int y, int width, int height, Color color){
     portal->rect = (Rectangle){x, y, width, height};

@@ -6,9 +6,9 @@
 #include "raylib.h"
 
 #include "config.h"
-#include "fire.h"
-#include "platform.h"
-#include "portal.h"
+#include "world/fire.h"
+#include "world/platform.h"
+#include "world/portal.h"
 
 typedef struct SamuraiAssets {
     Texture2D idleTexture;

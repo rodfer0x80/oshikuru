@@ -1,13 +1,13 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include "raylib.h"
 
-#include "config/config.h"
-#include "characters/npc.h"
-#include "map/platform.h"
-#include "map/portal.h"
-#include "characters/samurai.h"
+#include "config.h"
+#include "entities/npc.h"
+#include "world/platform.h"
+#include "world/portal.h"
+#include "entities/samurai.h"
 
 void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
                 Portal *portal, NPCS *npcs, float *timer);
@@ -20,4 +20,4 @@ void renderVictory();
 
 void renderDefeat();
 
-#endif // GAME_H
+#endif // RENDER_H

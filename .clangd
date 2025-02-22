@@ -1,0 +1,8 @@
+CompileFlags:
+  Add: 
+    -Iinclude
+    -Iinclude/core
+    -Iinclude/engine
+    -Iinclude/entities
+    -Iinclude/world
+

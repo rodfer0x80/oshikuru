@@ -1,4 +1,4 @@
-#include "platform.h"
+#include "world/platform.h"
 
 void newPlatform(Platforms *platforms, Vector2 position, int width, int height,
                  Color color) {
