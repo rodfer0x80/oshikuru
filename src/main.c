@@ -48,15 +48,7 @@ int main() {
     Texture2D samuraiRunTexture = loadSamuraiRunTexture();
     Texture2D samuraiAttackTexture = loadSamuraiAttackTexture();
     Texture2D samuraiHurtTexture = loadSamuraiHurtTexture();
-    if (samuraiIdleTexture.id == 0 || samuraiRunTexture.id == 0 ||
-        samuraiAttackTexture.id == 0 || samuraiHurtTexture.id == 0) {
-        TraceLog(LOG_INFO,
-                 TextFormat("Failed to load assets - [%d] [%d] [%d] [%d]",
-                            samuraiIdleTexture.id, samuraiRunTexture.id,
-                            samuraiAttackTexture.id, samuraiHurtTexture.id));
-        return -1;
-    }
-
+    Texture2D portalTexture = loadPortalTexture();
     // ----
 
     // Game data
@@ -75,7 +67,8 @@ int main() {
     Platforms platforms = {{}, 0};
     Fires fires = {{}, 0};
     NPCS npcs = {{}, 0};
-    Portal portal;
+    Portal portal = {
+        .rec = {}, .color = 0, .animation = {portalTexture, 0, 0.0f}};
     bool inGame = false;
     int level = 0;
     bool nextLevel = true;
@@ -83,7 +76,9 @@ int main() {
     // ----
 
     // Main loop
+    float deltaTime;
     while (!WindowShouldClose()) {
+        deltaTime = GetFrameTime(); 
         BeginDrawing();
 
         // Ingame commands
@@ -168,8 +163,9 @@ int main() {
 
         // Update game state
         if (inGame) {
-            updateSamurai(&samurai, &platforms, &fires);
+            updateSamurai(&samurai, &platforms, &fires, &deltaTime);
             updateNPCS(&npcs, &samurai);
+            updatePortal(&portal, &deltaTime);
             // Next level condition
             if (samuraiPassesPortal(&samurai, &portal)) {
                 level++;

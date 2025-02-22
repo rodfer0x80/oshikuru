@@ -11,16 +11,17 @@ void samuraiHitFor(Samurai *samurai, float damage) {
             if (samurai->stats.hitpoints <= 0.0)
                 samurai->state.isDead = true;
             diffHitpoints = initHitpoints - samurai->stats.hitpoints;
-            TraceLog(LOG_INFO, TextFormat("[Samurai] Damage Taken %.0f, "
-                                      "Current Hitpoints: %.0f",
-                                      diffHitpoints, samurai->stats.hitpoints));
+            TraceLog(LOG_INFO,
+                     TextFormat("[Samurai] Damage Taken %.0f, "
+                                "Current Hitpoints: %.0f",
+                                diffHitpoints, samurai->stats.hitpoints));
         }
     }
 }
 
-void updateSamuraiAnimation(Samurai *samurai) {
+void updateSamuraiAnimation(Samurai *samurai, float *deltaTime) {
     // Update tempo
-    samurai->animation.frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
+    samurai->animation.frameCounter += *deltaTime * SAMURAI_ANIMATION_SPEED;
     // ----
 
     // Update animation
@@ -184,8 +185,9 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     // ----
 }
 
-void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires) {
-    updateSamuraiAnimation(samurai);
+void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires,
+                   float *deltaTime) {
+    updateSamuraiAnimation(samurai, deltaTime);
     updateSamuraiMovement(samurai);
     updateSamuraiPhysics(samurai, platforms, fires);
     if (samurai->state.isDead) {
@@ -209,5 +211,5 @@ bool samuraiPassesPortal(Samurai *samurai, Portal *portal) {
                             SAMURAI_Y_REC};
     samurai->hitbox.rec = samuraiRec;
     // ----
-    return CheckCollisionRecs(samurai->hitbox.rec, portal->rect);
+    return CheckCollisionRecs(samurai->hitbox.rec, portal->rec);
 }

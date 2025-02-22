@@ -10,11 +10,10 @@
 Texture2D loadTexture(char* textureFilePath, int frameCount, int frameSize);
 
 Texture2D loadSamuraiIdleTexture();
-
 Texture2D loadSamuraiRunTexture();
-
 Texture2D loadSamuraiAttackTexture();
-
 Texture2D loadSamuraiHurtTexture();
+
+Texture2D loadPortalTexture();
 
 #endif // ASSETS_H

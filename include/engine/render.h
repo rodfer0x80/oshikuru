@@ -16,6 +16,8 @@ void renderMenu(Samurai *samurai);
 
 void renderSamurai(Samurai *samurai);
 
+void renderPortal(Portal *portal);
+
 void renderVictory();
 
 void renderDefeat();

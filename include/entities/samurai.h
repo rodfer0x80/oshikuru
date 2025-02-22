@@ -33,7 +33,7 @@ typedef struct SamuraiStats {
 } SamuraiStats;
 
 typedef struct SamuraiState {
-    bool facingLeft;
+    bool facingLeft; //TODO: isFacingLeft
     bool isRunning;
     bool isJumping;
     bool isAttacking;
@@ -68,13 +68,13 @@ typedef struct Samurai {
 
 void samuraiHitFor(Samurai *samurai, float damage);
 
-void updateSamuraiAnimation(Samurai *samurai);
+void updateSamuraiAnimation(Samurai *samurai, float *deltaTime);
 
 void updateSamuraiMovement(Samurai *samurai);
 
 void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms, Fires *fires);
 
-void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires);
+void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires, float *deltaTime);
 
 bool samuraiPassesPortal(Samurai *samurai, Portal *portal);
 

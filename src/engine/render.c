@@ -9,8 +9,8 @@ void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
     // Draw relevant player stats
     DrawText(TextFormat("[H: %.0f]", samurai->stats.hitpoints),
              SCREEN_WIDTH - 180, 40, 40, DARKBLUE);
-    DrawText(TextFormat("[L: %d]", samurai->stats.lives),
-             SCREEN_WIDTH - 300, 40, 40, DARKBLUE);
+    DrawText(TextFormat("[L: %d]", samurai->stats.lives), SCREEN_WIDTH - 300,
+             40, 40, DARKBLUE);
     // ----
     // ----
 
@@ -44,9 +44,11 @@ void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
     // ----
 
     // Draw portal
-    DrawRectangleRec(portal->rect, portal->color);
+    // DrawRectangleRec(portal->rect, portal->color);
+    //DrawTexture(portal->animation.texture, portal->rec.x, portal->rec.y, WHITE);
+    renderPortal(portal);
     if (DEBUG_RAYLIB)
-        DrawRectangleLinesEx(portal->rect, 2, PINK);
+        DrawRectangleLinesEx(portal->rec, 2, PINK);
     // ----
 
     // Draw player
@@ -135,4 +137,14 @@ void renderSamurai(Samurai *samurai) {
     }
 
     DrawTexturePro(texture, sourceRect, destRect, (Vector2){0, 0}, 0.0f, WHITE);
+}
+
+void renderPortal(Portal *portal) {
+    int frameWidth = portal->animation.texture.width / PORTAL_FRAME_COUNT;
+    Rectangle sourceRect = {portal->animation.currentFrame * frameWidth, 0,
+                            frameWidth, portal->animation.texture.height};
+    Rectangle destRect = {portal->rec.x, portal->rec.y, portal->rec.width,
+                          portal->rec.height};
+    DrawTexturePro(portal->animation.texture, sourceRect, destRect,
+                   (Vector2){0, 0}, 0.0f, WHITE);
 }

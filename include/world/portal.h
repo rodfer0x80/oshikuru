@@ -7,12 +7,22 @@
 
 #include "config.h"
 
+typedef struct PortalAnimation {
+    Texture2D texture;
+    int currentFrame;
+    float frameTime;
+} PortalAnimation;
+
 typedef struct Portal {
-    Rectangle rect;
+    Rectangle rec;
     Color color;
+    PortalAnimation animation;
 } Portal;
 
-void newPortal(Portal *portal, int x, int y, int width, int height, Color color);
+void newPortal(Portal *portal, int x, int y, int width, int height,
+               Color color);
+
+void updatePortal(Portal *portal, float *deltaTime);
 
 void portalLevel0(Portal *portal);
 
