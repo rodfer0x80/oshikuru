@@ -11,21 +11,22 @@
 #define SAMURAI_FRAME_SIZE 200
 #define SAMURAI_ANIMATION_SPEED 12
 
-#define SAMURAI_RUN_TEXTURE "samurai_run.png"
+#define SAMURAI_RUN_TEXTURE "samurai/run.png"
 #define SAMURAI_RUN_FRAME_COUNT 16
 
-#define SAMURAI_IDLE_TEXTURE "samurai_idle.png"
+#define SAMURAI_IDLE_TEXTURE "samurai/idle.png"
 #define SAMURAI_IDLE_FRAME_COUNT 10
 
-#define SAMURAI_ATTACK_TEXTURE "samurai_attack.png"
+#define SAMURAI_ATTACK_TEXTURE "samurai/attack.png"
 #define SAMURAI_ATTACK_FRAME_COUNT 7
 
 #define SAMURAI_SLASH_FRAME 5
+#define SAMURAI_SLASH_FRAME_COUNT 10 //2 * SAMURAI_SLASH_FRAME
 #define SAMURAI_ATTACK_RANGE 75
 
-#define SAMURAI_HURT_TEXTURE "samurai_hurt.png"
+#define SAMURAI_HURT_TEXTURE "samurai/hurt.png"
 #define SAMURAI_HURT_FRAME_COUNT 4
-#define SAMURAI_MAX_HITPOINTS 100.0
+#define SAMURAI_MAX_HITPOINTS 100.0f
 
 #define SAMURAI_X_MOD 0.40 * SAMURAI_FRAME_SIZE // 80
 #define SAMURAI_X_REC 0.20 * SAMURAI_FRAME_SIZE // 40

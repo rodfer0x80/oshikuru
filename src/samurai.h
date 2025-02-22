@@ -25,6 +25,7 @@ typedef struct SamuraiAnimation {
 } SamuraiAnimation;
 
 typedef struct SamuraiStats {
+    int lives;
     float hitpoints;
     float damage;
     float jumpStrength;
@@ -38,6 +39,7 @@ typedef struct SamuraiState {
     bool isAttacking;
     bool isHurt;
     bool isDead;
+    bool hasDied;
     bool isImmune;
 } SamuraiState;
 
@@ -63,6 +65,8 @@ typedef struct Samurai {
     SamuraiAnimation animation;
     SamuraiSlash slash;
 } Samurai;
+
+void samuraiHitFor(Samurai *samurai, float damage);
 
 void updateSamuraiAnimation(Samurai *samurai);
 

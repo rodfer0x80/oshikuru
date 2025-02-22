@@ -14,7 +14,8 @@ Add info trace on main game logic too
 
 > #3 
 ````
-Make NPCs like samurai with diff texture and smart movement and attack
+Make NPCs like samurai with diff texture and smart movement and attack,
+collisions, states etc
 ````
 
 > #4 

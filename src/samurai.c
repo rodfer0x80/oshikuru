@@ -1,10 +1,28 @@
 #include "samurai.h"
 
+void samuraiHitFor(Samurai *samurai, float damage) {
+    float diffHitpoints;
+    float initHitpoints;
+    initHitpoints = samurai->stats.hitpoints;
+    if (!samurai->state.isImmune) {
+        if (!samurai->state.isHurt) {
+            samurai->state.isHurt = true;
+            samurai->stats.hitpoints -= damage;
+            if (samurai->stats.hitpoints <= 0.0)
+                samurai->state.isDead = true;
+            diffHitpoints = initHitpoints - samurai->stats.hitpoints;
+            TraceLog(LOG_INFO, TextFormat("[Samurai] Damage Taken %.0f, "
+                                      "Current Hitpoints: %.0f",
+                                      diffHitpoints, samurai->stats.hitpoints));
+        }
+    }
+}
+
 void updateSamuraiAnimation(Samurai *samurai) {
     // Update tempo
     samurai->animation.frameCounter += GetFrameTime() * SAMURAI_ANIMATION_SPEED;
     // ----
-    
+
     // Update animation
     if (samurai->animation.frameCounter >= 1.0f) {
         int frameCount;
@@ -17,7 +35,7 @@ void updateSamuraiAnimation(Samurai *samurai) {
         } else {
             frameCount = SAMURAI_IDLE_FRAME_COUNT;
         }
-        
+
         samurai->animation.frameIndex++;
         samurai->animation.frameCounter = 0.0f;
 
@@ -34,7 +52,7 @@ void updateSamuraiAnimation(Samurai *samurai) {
             samurai->animation.frameIndex %= frameCount;
         }
     }
-    // ---- 
+    // ----
 }
 
 void updateSamuraiMovement(Samurai *samurai) {
@@ -42,7 +60,7 @@ void updateSamuraiMovement(Samurai *samurai) {
     if (samurai->state.isHurt)
         samurai->state.isAttacking = false;
     // ----
-    
+
     // Controls
     bool isMoving = false;
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
@@ -70,12 +88,7 @@ void updateSamuraiMovement(Samurai *samurai) {
 
     // DEBUG controls
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_C) && !samurai->state.isHurt) {
-        samurai->state.isHurt = true;
-        if (!samurai->state.isImmune) {
-            samurai->stats.hitpoints -= 10;
-            if (samurai->stats.hitpoints <= 0.0)
-                samurai->state.isDead = true;
-        }
+        samuraiHitFor(samurai, 10.0f);
     }
     if (DEBUG_RAYLIB && IsKeyPressed(KEY_X)) {
         samurai->state.isHurt = true;
@@ -105,6 +118,7 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     // ----
 
     // Attack physics
+    // Slash applies damage 10x per attack
     if (samurai->state.isAttacking &&
         samurai->animation.frameIndex == SAMURAI_SLASH_FRAME &&
         !samurai->slash.isActive) {
@@ -114,7 +128,7 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
              samurai->position.y + SAMURAI_Y_MOD},
             SAMURAI_X_REC + SAMURAI_ATTACK_RANGE,
             SAMURAI_Y_REC,
-            samurai->stats.damage / SAMURAI_ATTACK_FRAME_COUNT,
+            samurai->stats.damage / SAMURAI_SLASH_FRAME_COUNT,
             true};
         samurai->slash = samuraiSlash;
     } else if (samurai->animation.frameIndex < SAMURAI_SLASH_FRAME ||
@@ -144,15 +158,7 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     // Map fire collision physics
     for (int i = 0; i < fires->count; i++) {
         if (CheckCollisionRecs(samurai->hitbox.slimRec, fires->units[i].rect)) {
-            if (!samurai->state.isHurt) {
-                samurai->state.isHurt = true;
-                if (!samurai->state.isImmune)
-                    samurai->stats.hitpoints -= fires->units[i].damage;
-            }
-            if (samurai->stats.hitpoints <= 0.0) {
-                if (!samurai->state.isImmune)
-                    samurai->state.isDead = true;
-            }
+            samuraiHitFor(samurai, fires->units[i].damage);
         }
     }
     // ----
@@ -182,6 +188,18 @@ void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires) {
     updateSamuraiAnimation(samurai);
     updateSamuraiMovement(samurai);
     updateSamuraiPhysics(samurai, platforms, fires);
+    if (samurai->state.isDead) {
+        if (--samurai->stats.lives > 0) {
+            TraceLog(LOG_INFO, TextFormat("[Samurai] Life lost, %d remaining",
+                                          samurai->stats.lives));
+            samurai->state.isDead = false;
+            samurai->stats.hitpoints = SAMURAI_MAX_HITPOINTS;
+            samurai->state.hasDied = true;
+        } else {
+            TraceLog(LOG_INFO,
+                     TextFormat("[Samurai] Dead, no more lives remaining"));
+        }
+    }
 }
 
 bool samuraiPassesPortal(Samurai *samurai, Portal *portal) {
@@ -193,4 +211,3 @@ bool samuraiPassesPortal(Samurai *samurai, Portal *portal) {
     // ----
     return CheckCollisionRecs(samurai->hitbox.rec, portal->rect);
 }
-

@@ -1,18 +1,22 @@
 #include "game.h"
 
+// TODO: change name from game to render for consistency
 // TODO: render player and npcs healthbars on top of heads red/black
 void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
                 Portal *portal, NPCS *npcs, float *timer) {
     ClearBackground(GRAY);
 
     // Draw relevant player stats
-    DrawText(TextFormat("[HP: %.0f]", samurai->stats.hitpoints),
+    DrawText(TextFormat("[H: %.0f]", samurai->stats.hitpoints),
              SCREEN_WIDTH - 180, 40, 40, DARKBLUE);
+    DrawText(TextFormat("[L: %d]", samurai->stats.lives),
+             SCREEN_WIDTH - 300, 40, 40, DARKBLUE);
+    // ----
     // ----
 
     // Update and draw timer
     *timer += GetFrameTime();
-    DrawText(TextFormat("[T: %.0f]", *timer), 40, 40, 40, DARKBLUE);
+    DrawText(TextFormat("[T: %.2f]", *timer), 40, 40, 40, DARKBLUE);
     // ----
 
     // Draw platforms
@@ -67,8 +71,8 @@ void renderMenu(Samurai *samurai) {
                      SCREEN_HEIGHT / 2.0f - SAMURAI_FRAME_SIZE / 2.0f},
         .hitbox = {{}, {}},
         .speed = {8.0f, 0.0f},
-        .stats = {100.0f, 20.0f, -20.0f, 1.2f},
-        .state = {false, false, false, false, false, false},
+        .stats = {3, 100.0f, 20.0f, -20.0f, 1.2f},
+        .state = {false, false, false, false, false, false, false},
         .animation = {.frameIndex = 0,
                       .frameCounter = 0.0f,
                       .attackFrame = 0,

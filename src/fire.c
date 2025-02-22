@@ -25,7 +25,7 @@ void firesLevel0(Fires *fires) {
     Vector2 fire1Position = {200, 350 - fireHeight};
     Vector2 fire2Position = {400, 350 - fireHeight};
     Color fireColor = ORANGE;
-    int fireDamage = 10;
+    int fireDamage = 100;
 
     resetFires(fires);
 
@@ -40,7 +40,7 @@ void firesLevel1(Fires *fires) {
     int fireHeight = 20;
     Vector2 fire1Position = {0, SCREEN_HEIGHT - fireHeight};
     Color fireColor = ORANGE;
-    int fireDamage = 2;
+    int fireDamage = 10;
 
     resetFires(fires);
 

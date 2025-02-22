@@ -14,9 +14,19 @@ void updateNPCS(NPCS *npcs, Samurai *samurai) {
                                  samurai->slash.width, samurai->slash.height};
 
     if (samurai->slash.isActive) {
+        float initHitpoints;
+        float diffHitpoints;
         for (int i = 0; i < npcs->count; i++) {
+            initHitpoints = npcs->units[i].hitpoints;
             if (CheckCollisionRecs(samuraiSlashRec, npcs->units[i].rect)) {
                 npcs->units[i].hitpoints -= samurai->slash.damage;
+                diffHitpoints = initHitpoints - npcs->units[i].hitpoints;
+                if (diffHitpoints) {
+                    TraceLog(LOG_INFO, TextFormat("[NPC%d] Damage Taken %.0f, "
+                                                  "Current Hitpoints: %.0f",
+                                                  i, diffHitpoints,
+                                                  npcs->units[i].hitpoints));
+                }
                 if (npcs->units[i].hitpoints <= 0) {
                     removeNPC(npcs, i);
                     i--;
@@ -56,8 +66,10 @@ void npcsLevel0(NPCS *npcs) {
 
     resetNPCS(npcs);
 
-    newNPC(npcs, &npc1Position, npcWidth, npcHeight, npcColor, npcHitpoints, npcDamage);
-    newNPC(npcs, &npc2Position, npcWidth, npcHeight, npcColor, npcHitpoints, npcDamage);
+    newNPC(npcs, &npc1Position, npcWidth, npcHeight, npcColor, npcHitpoints,
+           npcDamage);
+    newNPC(npcs, &npc2Position, npcWidth, npcHeight, npcColor, npcHitpoints,
+           npcDamage);
 }
 
 void npcsLevel1(NPCS *npcs) {
@@ -70,5 +82,6 @@ void npcsLevel1(NPCS *npcs) {
 
     resetNPCS(npcs);
 
-    newNPC(npcs, &npc1Position, npcWidth, npcHeight, npcColor, npcHitpoints, npcDamage);
+    newNPC(npcs, &npc1Position, npcWidth, npcHeight, npcColor, npcHitpoints,
+           npcDamage);
 }
