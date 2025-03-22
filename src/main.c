@@ -11,7 +11,8 @@
 #include "world/portal.h"
 
 void runLevel(int *level, float *timer, bool *nextLevel, Samurai *samurai,
-              Platforms *platforms, Fires *fires, NPCS *npcs, Portal *portal) {
+              Platforms *platforms, Fires *fires, NPCS *npcs,
+              NPCAssets NPCLoadedAssets, Portal *portal) {
     *timer = 0.0f;
     *nextLevel = false;
     samurai->position.x = SCREEN_WIDTH;
@@ -22,13 +23,13 @@ void runLevel(int *level, float *timer, bool *nextLevel, Samurai *samurai,
         platformsLevel0(platforms);
         firesLevel0(fires);
         portalLevel0(portal);
-        npcsLevel0(npcs);
+        npcsLevel0(npcs, NPCLoadedAssets);
     }
     if (*level == 1) {
         platformsLevel1(platforms);
         firesLevel1(fires);
         portalLevel1(portal);
-        npcsLevel1(npcs);
+        npcsLevel1(npcs, NPCLoadedAssets);
     }
     TraceLog(LOG_INFO, TextFormat("[MAIN]: Level %d started", *level));
 }
@@ -44,11 +45,24 @@ int main() {
     // ----
 
     // Load assets
+    // TODO: move this and the cleanup to functions in render
     Texture2D samuraiIdleTexture = loadSamuraiIdleTexture();
     Texture2D samuraiRunTexture = loadSamuraiRunTexture();
     Texture2D samuraiAttackTexture = loadSamuraiAttackTexture();
     Texture2D samuraiHurtTexture = loadSamuraiHurtTexture();
     Texture2D portalTexture = loadPortalTexture();
+    Texture2D NPCIdleTexture = loadNPCIdleTexture();
+    Texture2D NPCAttackTexture = loadNPCAttackTexture();
+    Texture2D NPCHurtTexture = loadNPCHurtTexture();
+    Texture2D NPCDeathTexture = loadNPCDeathTexture();
+    Texture2D NPCFlyingTexture = loadNPCFlyingTexture();
+    Texture2D NPCProjectileTexture = loadNPCProjectileTexture();
+    NPCAssets NPCLoadedAssets = {.idleTexture = NPCIdleTexture,
+                                 .attackTexture = NPCAttackTexture,
+                                 .hurtTexture = NPCHurtTexture,
+                                 .deathTexture = NPCDeathTexture,
+                                 .flyingTexture = NPCFlyingTexture,
+                                 .projectileTexture = NPCProjectileTexture};
     // ----
 
     // Game data
@@ -78,7 +92,7 @@ int main() {
     // Main loop
     float deltaTime;
     while (!WindowShouldClose()) {
-        deltaTime = GetFrameTime(); 
+        deltaTime = GetFrameTime();
         BeginDrawing();
 
         // Ingame commands
@@ -150,21 +164,21 @@ int main() {
         // Update level
         if (nextLevel)
             runLevel(&level, &timer, &nextLevel, &samurai, &platforms, &fires,
-                     &npcs, &portal);
+                     &npcs, NPCLoadedAssets, &portal);
         // ----
 
         // Update level on samurai death (if lives > 0)
         if (samurai.state.hasDied) {
             samurai.state.hasDied = false;
             runLevel(&level, &timer, &nextLevel, &samurai, &platforms, &fires,
-                     &npcs, &portal);
+                     &npcs, NPCLoadedAssets, &portal);
         }
         // ----
 
         // Update game state
         if (inGame) {
             updateSamurai(&samurai, &platforms, &fires, &deltaTime);
-            updateNPCS(&npcs, &samurai);
+            updateNPCS(&npcs, &samurai, &deltaTime);
             updatePortal(&portal, &deltaTime);
             // Next level condition
             if (samuraiPassesPortal(&samurai, &portal)) {
@@ -190,6 +204,11 @@ int main() {
     UnloadTexture(samuraiRunTexture);
     UnloadTexture(samuraiAttackTexture);
     UnloadTexture(samuraiHurtTexture);
+    UnloadTexture(NPCIdleTexture);
+    UnloadTexture(NPCAttackTexture);
+    UnloadTexture(NPCHurtTexture);
+    UnloadTexture(NPCDeathTexture);
+    UnloadTexture(NPCFlyingTexture);
     CloseWindow();
     // ----
 

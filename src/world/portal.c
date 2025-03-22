@@ -18,7 +18,7 @@ void updatePortal(Portal *portal, float *deltaTime) {
 }
 
 void portalLevel0(Portal *portal) {
-    newPortal(portal, 310, 260, 80, 100, BLACK);
+    newPortal(portal, 310, 250, 80, 100, BLACK);
 }
 
 void portalLevel1(Portal *portal) {

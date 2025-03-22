@@ -33,6 +33,22 @@
 #define SAMURAI_Y_SLIM_MOD 0.82 * SAMURAI_FRAME_SIZE // 166
 #define SAMURAI_Y_SLIM_REC 0.04 * SAMURAI_FRAME_SIZE // 8
 
+// NPC
+#define NPC_FRAME_SIZE 200
+#define NPC_ANIMATION_SPEED 8.0f
+#define NPC_IDLE_FRAME_COUNT 4
+#define NPC_FLYING_FRAME_COUNT 4  
+#define NPC_ATTACK_FRAME_COUNT 8
+#define NPC_HURT_FRAME_COUNT 4
+#define NPC_DEATH_FRAME_COUNT 6
+#define NPC_PROJECTILE_FRAME_COUNT 1
+#define NPC_IDLE_TEXTURE "entities/demon/idle.png"
+#define NPC_ATTACK_TEXTURE "entities/demon/attack.png"
+#define NPC_HURT_TEXTURE "entities/demon/hurt.png"
+#define NPC_DEATH_TEXTURE "entities/demon/death.png"
+#define NPC_FLYING_TEXTURE "entities/demon/flying.png"
+#define NPC_PROJECTILE_TEXTURE "entities/demon/projectile.png"
+
 // LEVEL
 #define MAX_LEVEL 1
 
@@ -44,6 +60,7 @@
 
 // NPC
 #define MAX_NPCS 127
+#define MAX_NPC_PROJECTILES 255
 
 // PORTAL
 #define PORTAL_TEXTURE "world/portal/portal.png"

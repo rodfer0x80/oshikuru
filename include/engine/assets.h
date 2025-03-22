@@ -14,6 +14,13 @@ Texture2D loadSamuraiRunTexture();
 Texture2D loadSamuraiAttackTexture();
 Texture2D loadSamuraiHurtTexture();
 
+Texture2D loadNPCIdleTexture();
+Texture2D loadNPCAttackTexture();
+Texture2D loadNPCHurtTexture();
+Texture2D loadNPCDeathTexture();
+Texture2D loadNPCFlyingTexture();
+Texture2D loadNPCProjectileTexture();
+
 Texture2D loadPortalTexture();
 
 #endif // ASSETS_H

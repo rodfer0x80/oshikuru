@@ -1,9 +1,9 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "raylib.h"
+//#include "raylib.h"
 
-#include "config.h"
+//#include "config.h"
 #include "entities/npc.h"
 #include "world/platform.h"
 #include "world/portal.h"
@@ -15,6 +15,9 @@ void renderGame(Samurai *samurai, Platforms *platforms, Fires *fires,
 void renderMenu(Samurai *samurai);
 
 void renderSamurai(Samurai *samurai);
+
+void renderNPC(NPC *npc);
+void renderNPCS(NPCS *npcs);
 
 void renderPortal(Portal *portal);
 
