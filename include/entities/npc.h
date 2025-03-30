@@ -7,7 +7,14 @@
 #include "raylib.h"
 
 #include "config.h"
-#include "samurai.h"
+
+struct SamuraiAssets;
+struct SamuraiAnimation;
+struct SamuraiStats;
+struct SamuraiState;
+struct SamuraiSlash;
+struct SamuraiHitbox;
+struct Samurai;
 
 typedef struct NPCAssets {
     Texture2D idleTexture;
@@ -65,8 +72,8 @@ typedef struct NPCS {
 
 void updateNPCAnimation(NPC *npc, float *deltaTime);
 void removeNPC(NPCS *npcs, int n);
-void updateNPC(NPC *npc, Samurai *samurai, float *deltaTime);
-void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime);
+void updateNPC(NPC *npc, struct Samurai *samurai, float *deltaTime);
+void updateNPCS(NPCS *npcs, struct Samurai *samurai, float *deltaTime);
 void newNPC(NPCS *npcs, NPCAssets loadedAssets, Vector2 *position, int width, int height, Color color,
             float hitpoints, float damage);
 void resetNPCS(NPCS *npcs);

@@ -177,7 +177,7 @@ int main() {
 
         // Update game state
         if (inGame) {
-            updateSamurai(&samurai, &platforms, &fires, &deltaTime);
+            updateSamurai(&samurai, &platforms, &fires, &npcs, &deltaTime);
             updateNPCS(&npcs, &samurai, &deltaTime);
             updatePortal(&portal, &deltaTime);
             // Next level condition

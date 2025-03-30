@@ -1,4 +1,5 @@
 #include "entities/npc.h"
+#include "entities/samurai.h"
 
 void removeNPC(NPCS *npcs, int n) {
     for (int j = n; j < npcs->count - 1; j++) {

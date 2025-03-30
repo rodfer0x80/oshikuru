@@ -105,7 +105,7 @@ void updateSamuraiMovement(Samurai *samurai) {
 }
 
 void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
-                          Fires *fires) {
+                          Fires *fires, NPCS *npcs) {
     // Update slim rectangle
     Rectangle samuraiSlimRec = {samurai->position.x + SAMURAI_X_SLIM_MOD,
                                 samurai->position.y + SAMURAI_Y_SLIM_MOD,
@@ -116,6 +116,17 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     // Update gravity application
     samurai->speed.y += samurai->stats.gravityEffect;
     samurai->position.y += samurai->speed.y;
+    // ----
+
+    // Samurai X NPC collision damages Samurai for flat 5hp
+        if (!samurai->state.isHurt) {
+            for (int i = 0; i < npcs->count; i++) {
+                if (CheckCollisionRecs(samurai->hitbox.rec, npcs->units[i].rect)) {
+                    samuraiHitFor(samurai, 10);
+                    break;
+                }
+            }
+        }
     // ----
 
     // Attack physics
@@ -185,11 +196,11 @@ void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms,
     // ----
 }
 
-void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires,
+void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires, NPCS *npcs,
                    float *deltaTime) {
     updateSamuraiAnimation(samurai, deltaTime);
     updateSamuraiMovement(samurai);
-    updateSamuraiPhysics(samurai, platforms, fires);
+    updateSamuraiPhysics(samurai, platforms, fires, npcs);
     if (samurai->state.isDead) {
         if (--samurai->stats.lives > 0) {
             TraceLog(LOG_INFO, TextFormat("[Samurai] Life lost, %d remaining",

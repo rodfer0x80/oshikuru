@@ -5,10 +5,11 @@
 
 #include "raylib.h"
 
-#include "config.h"
+//#include "config.h"
 #include "world/fire.h"
 #include "world/platform.h"
 #include "world/portal.h"
+#include "entities/npc.h"
 
 typedef struct SamuraiAssets {
     Texture2D idleTexture;
@@ -72,9 +73,9 @@ void updateSamuraiAnimation(Samurai *samurai, float *deltaTime);
 
 void updateSamuraiMovement(Samurai *samurai);
 
-void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms, Fires *fires);
+void updateSamuraiPhysics(Samurai *samurai, Platforms *platforms, Fires *fires, NPCS *npcs);
 
-void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires, float *deltaTime);
+void updateSamurai(Samurai *samurai, Platforms *platforms, Fires *fires, NPCS *npcs, float *deltaTime);
 
 bool samuraiPassesPortal(Samurai *samurai, Portal *portal);
 
