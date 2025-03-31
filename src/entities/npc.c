@@ -57,6 +57,13 @@ void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime) {
                             samurai->position.y + SAMURAI_Y_MOD, SAMURAI_X_REC,
                             SAMURAI_Y_REC};
 
+
+    // Update NPCS position after movement
+        
+    // ----
+
+    // NPCS collision with Samurai Slash attack
+    // And update animation
     if (samurai->slash.isActive) {
         float initHitpoints;
         float diffHitpoints;
@@ -97,6 +104,7 @@ void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime) {
             updateNPCAnimation(&npcs->units[i], deltaTime);
         }
     }
+    // ----
 }
 
 void newNPC(NPCS *npcs, NPCAssets loadedAssets, Vector2 *position, int width,
