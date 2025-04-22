@@ -58,6 +58,10 @@ void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime) {
                             SAMURAI_Y_REC};
 
 
+    // Update projetiles
+
+    // ----
+
     // Update NPCS position after movement
         
     // ----
@@ -101,6 +105,16 @@ void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime) {
     } else {
         // When not getting hit, still update animations
         for (int i = 0; i < npcs->count; i++) {
+            // If not getting hurt and attack is available, do it 
+            if (!npcs->units[i].state.isHurt && npcs->units[i].attackCooldownRemaining <= 0.0f && !npcs->units[i].isAttacking) {
+                npcs->units[i].attackCooldownRemaining = npcs->units[i].attackCooldown;
+                npc->units[i].state.isAttacking = true;
+                // Shoot projectile
+                // --
+            } else {
+                npcs->units[i].state.isAttacking = false;
+                npcs->units[i].attackCooldown -= 1;
+            }
             updateNPCAnimation(&npcs->units[i], deltaTime);
         }
     }
@@ -108,13 +122,15 @@ void updateNPCS(NPCS *npcs, Samurai *samurai, float *deltaTime) {
 }
 
 void newNPC(NPCS *npcs, NPCAssets loadedAssets, Vector2 *position, int width,
-            int height, Color color, float hitpoints, float damage) {
+            int height, Color color, float hitpoints, float damage, float attackCooldown) {
     if (npcs->count < MAX_NPCS) {
         NPC npc = {
             .rect = (Rectangle){position->x, position->y, width, height},
             .color = color,
             .hitpoints = hitpoints,
             .damage = damage,
+            .attackCooldown = attackCooldown,
+            .attackCooldownRemaining = attackCooldown,
             .position = *position,
             .speed = (Vector2){0, 0},
             .animation = {.frameIndex = 0,
@@ -157,14 +173,15 @@ void npcsLevel0(NPCS *npcs, NPCAssets NPCLoadedAssets) {
     Vector2 npc2Position = {400, SCREEN_HEIGHT - npcHeight - 20 - 20};
     Color npcColor = PURPLE;
     float npcDamage = 10.0f;
+    float npcAttackCooldown = 4.0f;
     float npcHitpoints = 100.0f;
 
     resetNPCS(npcs);
 
     newNPC(npcs, NPCLoadedAssets, &npc1Position, npcWidth, npcHeight, npcColor,
-           npcHitpoints, npcDamage);
+           npcHitpoints, npcDamage, npcAttackCooldown);
     newNPC(npcs, NPCLoadedAssets, &npc2Position, npcWidth, npcHeight, npcColor,
-           npcHitpoints, npcDamage);
+           npcHitpoints, npcDamage, npcAttackCooldown);
 }
 
 void npcsLevel1(NPCS *npcs, NPCAssets NPCLoadedAssets) {

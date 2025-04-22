@@ -57,6 +57,8 @@ typedef struct NPC {
     Color color;
     float hitpoints;
     float damage;
+    float attackCooldown;
+    float attackCooldownRemaining;
     NPCAnimation animation;
     NPCState state;
     Vector2 position;
@@ -75,7 +77,7 @@ void removeNPC(NPCS *npcs, int n);
 void updateNPC(NPC *npc, struct Samurai *samurai, float *deltaTime);
 void updateNPCS(NPCS *npcs, struct Samurai *samurai, float *deltaTime);
 void newNPC(NPCS *npcs, NPCAssets loadedAssets, Vector2 *position, int width, int height, Color color,
-            float hitpoints, float damage);
+            float hitpoints, float damage, float attackCooldown);
 void resetNPCS(NPCS *npcs);
 
 void npcsLevel0(NPCS *npcs, NPCAssets NPCLoadedAssets);
